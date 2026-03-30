@@ -56,83 +56,143 @@
     const quizQuestions = [
       {
         category: "Competenza linguistica e ragionamento logico",
-        passage: "L'introduzione della tecnologia nelle aule scolastiche ha trasformato radicalmente il ruolo dell'insegnante. Non più unico detentore del sapere, il docente diventa un facilitatore dell'apprendimento, guidando gli studenti nella vasta rete di informazioni disponibili online. Tuttavia, questa transizione richiede un aggiornamento continuo delle competenze pedagogiche e digitali, senza le quali gli strumenti tecnologici rischiano di trasformarsi in mere distrazioni piuttosto che in reali risorse educative.",
-        question: "Secondo il brano, qual è il principale rischio legato all'uso della tecnologia in classe senza un'adeguata preparazione del docente?",
-        options: ["Che gli studenti superino l'insegnante in conoscenze informatiche.", "Che la tecnologia diventi una distrazione invece di una risorsa.", "Che il ruolo dell'insegnante venga completamente sostituito dai computer.", "Che le scuole debbano spendere troppi fondi per l'aggiornamento.", "Che la rete di informazioni online risulti inaffidabile."],
-        correctAnswerIndex: 1,
-        explanation: "Il testo afferma esplicitamente che senza le adeguate competenze pedagogiche e digitali, «gli strumenti tecnologici rischiano di trasformarsi in mere distrazioni piuttosto che in reali risorse educative»."
-      },
-      {
-        category: "Competenza linguistica e ragionamento logico",
-        passage: "",
-        question: "\"Tutti gli alberi hanno le radici. Il pino è un albero. Quindi il pino ha le radici.\" Quale delle seguenti affermazioni segue la medesima struttura logica?",
-        options: ["Qualche mammifero vola. Il pipistrello è un mammifero. Quindi il pipistrello vola.", "Tutti i felini sono carnivori. Il gatto è un felino. Quindi il gatto è carnivoro.", "Nessun uccello ha le squame. Il serpente ha le squame. Quindi il serpente non è un uccello.", "Se piove prendo l'ombrello. Non piove, quindi non prendo l'ombrello.", "Tutti i pesci nuotano. La balena nuota. Quindi la balena è un pesce."],
-        correctAnswerIndex: 1,
-        explanation: "Il sillogismo originale è del tipo: 'Tutti gli A sono B. C è un A. Quindi C è B.' L'opzione corretta segue esattamente la medesima struttura deduttiva."
-      },
-      {
-        category: "Competenza linguistica e ragionamento logico",
-        passage: "",
-        question: "In quale delle seguenti frasi è presente un errore nell'uso dei modi verbali?",
-        options: ["Pensavo che tu fossi già partito per Roma.", "Sebbene sia stanco, continuerò a studiare.", "Credo che ieri sera hai mangiato troppo.", "Vorrei che mi ascoltassi con più attenzione.", "È necessario che tutti consegnino il compito in orario."],
+        passage: "L'apprendimento non è un processo passivo di assorbimento di informazioni, ma un'attività costruttiva in cui il soggetto rielabora i dati dell'esperienza alla luce dei propri schemi cognitivi pregressi. Secondo l'approccio costruttivista, l'insegnante non deve limitarsi a trasmettere nozioni, ma deve facilitare la scoperta autonoma da parte dell'alunno, predisponendo ambienti di apprendimento ricchi e stimolanti. L'errore, in questa prospettiva, perde la sua connotazione puramente negativa e diventa un indicatore prezioso dei processi mentali in atto, un'opportunità per ristrutturare la conoscenza.",
+        question: "Secondo il brano, quale ruolo assume l'errore nell'approccio costruttivista?",
+        options: [
+          "Un segno di incapacità dell'alunno che va sanzionato severamente",
+          "Una dimostrazione dell'inefficacia del metodo di insegnamento adottato",
+          "Uno strumento utile per comprendere i processi mentali e favorire l'apprendimento",
+          "Un ostacolo insormontabile che impedisce l'acquisizione di nuove nozioni",
+          "Un elemento del tutto ininfluente nel processo di scoperta autonoma"
+        ],
         correctAnswerIndex: 2,
-        explanation: "Dopo il verbo 'credere', che esprime un'opinione personale, la proposizione subordinata richiede l'uso del congiuntivo. La forma grammaticalmente corretta è 'Credo che ieri sera tu abbia mangiato troppo'."
+        explanation: "Il brano afferma esplicitamente che l'errore 'diventa un indicatore prezioso dei processi mentali in atto, un'opportunità per ristrutturare la conoscenza'."
       },
       {
         category: "Competenza linguistica e ragionamento logico",
         passage: "",
-        question: "\"Condizione sufficiente, ma non necessaria, affinché Marco superi l'esame è che studi almeno 4 ore al giorno\". In base a questa affermazione, quale deduzione è sicuramente vera?",
-        options: ["Se Marco ha superato l'esame, significa che ha studiato almeno 4 ore al giorno.", "Se Marco non studia almeno 4 ore al giorno, sicuramente non supererà l'esame.", "Marco può superare l'esame anche studiando meno di 4 ore al giorno.", "Se Marco studia 3 ore al giorno, supererà sicuramente l'esame.", "Studiare 4 ore al giorno è l'unico modo per superare l'esame."],
-        correctAnswerIndex: 2,
-        explanation: "Essendo lo studio di 4 ore una condizione 'non necessaria', significa che Marco ha la possibilità di superare l'esame anche attraverso altre strade (ad esempio, avendo già un'ottima preparazione di base)."
-      },
-      {
-        category: "Competenza linguistica e ragionamento logico",
-        passage: "",
-        question: "Quale numero completa logicamente la seguente serie logico-matematica? 2, 5, 11, 23, 47, ?",
-        options: ["94", "95", "93", "71", "101"],
+        question: "\"Tutti i fiori del mio giardino sono rose. Alcune rose sono profumate. Tutte le piante profumate attirano le api.\" Quale delle seguenti affermazioni è logicamente deducibile in modo rigoroso?",
+        options: [
+          "Tutte le rose del mio giardino attirano le api",
+          "Alcuni fiori del mio giardino attirano le api",
+          "Tutte le api sono attirate dalle rose",
+          "Nel mio giardino ci sono solo piante profumate",
+          "Nessun fiore del mio giardino attira le api"
+        ],
         correctAnswerIndex: 1,
-        explanation: "La regola della sequenza consiste nel moltiplicare il numero precedente per 2 e aggiungere 1. Infatti: (47 * 2) + 1 = 95."
+        explanation: "Poiché alcune rose (che sono i fiori del giardino) sono profumate e tutte le piante profumate attirano le api, si può dedurre con certezza che almeno alcuni fiori del giardino attirano le api."
+      },
+      {
+        category: "Competenza linguistica e ragionamento logico",
+        passage: "",
+        question: "Individua il termine che completa correttamente la seguente proporzione verbale: \"Pittore : Pennello = Scultore : X\"",
+        options: [
+          "Marmo",
+          "Statua",
+          "Scalpello",
+          "Tela",
+          "Museo"
+        ],
+        correctAnswerIndex: 2,
+        explanation: "La relazione è tra l'artista e il suo strumento di lavoro principale. Come il pittore usa il pennello, lo scultore usa lo scalpello."
+      },
+      {
+        category: "Competenza linguistica e ragionamento logico",
+        passage: "",
+        question: "In una classe di 25 alunni, 15 studiano inglese, 12 studiano francese e 5 studiano entrambe le lingue. Quanti alunni non studiano nessuna delle due lingue?",
+        options: [
+          "2",
+          "3",
+          "5",
+          "7",
+          "0"
+        ],
+        correctAnswerIndex: 1,
+        explanation: "Applicando la teoria degli insiemi: Alunni che studiano almeno una lingua = (15 + 12) - 5 = 22. Gli alunni che non studiano nessuna lingua sono 25 - 22 = 3."
+      },
+      {
+        category: "Competenza linguistica e ragionamento logico",
+        passage: "",
+        question: "In quale delle seguenti frasi è presente una proposizione subordinata concessiva?",
+        options: [
+          "Ti chiamerò non appena sarò arrivato a casa.",
+          "Nonostante fosse molto stanco, decise di continuare a studiare.",
+          "Affinché il progetto vada a buon fine, serve l'impegno di tutti.",
+          "Se avessi saputo della festa, sarei venuto sicuramente.",
+          "Penso che tu abbia preso la decisione più giusta."
+        ],
+        correctAnswerIndex: 1,
+        explanation: "La congiunzione 'nonostante' introduce una subordinata concessiva, che indica un fatto nonostante il quale si verifica quanto espresso nella principale."
       },
       {
         category: "Cultura letteraria, storico-sociale e geografica",
         passage: "",
-        question: "Quale dei seguenti celebri autori è l'ideatore e scrittore del romanzo \"Il fu Mattia Pascal\"?",
-        options: ["Giovanni Verga", "Italo Svevo", "Luigi Pirandello", "Gabriele D'Annunzio", "Grazia Deledda"],
+        question: "Quale dei seguenti autori ha scritto il celebre romanzo \"Il fu Mattia Pascal\"?",
+        options: [
+          "Giovanni Verga",
+          "Italo Svevo",
+          "Luigi Pirandello",
+          "Gabriele D'Annunzio",
+          "Italo Calvino"
+        ],
         correctAnswerIndex: 2,
-        explanation: "\"Il fu Mattia Pascal\" è uno dei romanzi più famosi e rivoluzionari di Luigi Pirandello, incentrato sui temi dell'identità e della maschera sociale, pubblicato nel 1904."
+        explanation: "Il romanzo 'Il fu Mattia Pascal' è una delle opere più note di Luigi Pirandello, pubblicata nel 1904."
       },
       {
         category: "Cultura letteraria, storico-sociale e geografica",
         passage: "",
-        question: "In quale anno avvenne lo storico evento della caduta del Muro di Berlino?",
-        options: ["1989", "1991", "1985", "1961", "1993"],
+        question: "L'articolo 3 della Costituzione Italiana sancisce:",
+        options: [
+          "Il principio di uguaglianza formale e sostanziale dei cittadini.",
+          "Il diritto e il dovere al lavoro per tutti i cittadini.",
+          "L'inviolabilità della libertà personale e del domicilio.",
+          "Il ripudio della guerra come strumento di offesa alla libertà degli altri popoli.",
+          "La libertà di professare liberamente la propria fede religiosa."
+        ],
         correctAnswerIndex: 0,
-        explanation: "Il Muro di Berlino, che divise fisicamente e ideologicamente la città per decenni diventando il simbolo della Guerra Fredda, cadde il 9 novembre 1989."
+        explanation: "L'articolo 3 della Costituzione recita che tutti i cittadini hanno pari dignità sociale e sono eguali davanti alla legge (uguaglianza formale), impegnando la Repubblica a rimuovere gli ostacoli che la limitano (uguaglianza sostanziale)."
       },
       {
         category: "Cultura letteraria, storico-sociale e geografica",
         passage: "",
-        question: "Individuare tra le seguenti l'unica regione italiana della penisola che NON è bagnata dal mare:",
-        options: ["Basilicata", "Veneto", "Molise", "Umbria", "Marche"],
-        correctAnswerIndex: 3,
-        explanation: "L'Umbria è l'unica regione dell'Italia peninsulare (escludendo quindi le regioni dell'arco alpino come Valle d'Aosta e Trentino) a non avere sbocchi sul mare."
-      },
-      {
-        category: "Cultura matematico-scientifica",
-        passage: "",
-        question: "Se un articolo costa inizialmente 80 euro e il negoziante decide di applicare uno sconto del 20%, qual è il prezzo di vendita finale?",
-        options: ["60 euro", "64 euro", "68 euro", "70 euro", "72 euro"],
+        question: "Quale tra questi fiumi europei attraversa la città di Parigi?",
+        options: [
+          "Il Tamigi",
+          "La Senna",
+          "Il Danubio",
+          "Il Reno",
+          "La Loira"
+        ],
         correctAnswerIndex: 1,
-        explanation: "Il 20% di 80 euro si calcola facendo (80 * 20) / 100 = 16. Sottraendo i 16 euro di sconto dal prezzo iniziale (80 - 16) si ottengono 64 euro."
+        explanation: "Parigi, la capitale della Francia, è attraversata in modo caratteristico dal fiume Senna."
       },
       {
         category: "Cultura matematico-scientifica",
         passage: "",
-        question: "Qual è l'organo del corpo umano incaricato della produzione dell'ormone insulina?",
-        options: ["Fegato", "Reni", "Pancreas", "Milza", "Cistifellea"],
+        question: "Qual è il risultato corretto della seguente espressione matematica: 3 + 4 x 2 - 8 ÷ 2 ?",
+        options: [
+          "3",
+          "7",
+          "5",
+          "10",
+          "14"
+        ],
+        correctAnswerIndex: 1,
+        explanation: "Seguendo l'ordine delle operazioni (prima moltiplicazioni e divisioni, poi addizioni e sottrazioni): 3 + 8 - 4 = 11 - 4 = 7."
+      },
+      {
+        category: "Cultura matematico-scientifica",
+        passage: "",
+        question: "Nelle cellule eucariote, in quale organulo è localizzato principalmente il materiale genetico (DNA)?",
+        options: [
+          "Nei ribosomi",
+          "Nell'apparato di Golgi",
+          "Nel nucleo",
+          "Nella membrana cellulare",
+          "Nel citoplasma"
+        ],
         correctAnswerIndex: 2,
-        explanation: "L'insulina è un ormone vitale prodotto dalle cellule beta delle isole di Langerhans, situate nel pancreas. È essenziale per regolare il livello di glucosio nel sangue."
+        explanation: "A differenza delle cellule procariote, le cellule eucariote presentano un nucleo ben definito racchiuso da una membrana, all'interno del quale è contenuto il DNA."
       }
     ];
 
@@ -273,9 +333,9 @@
                   <ListOrdered className="w-5 h-5 text-indigo-600"/> Struttura del Test ({quizQuestions.length} Quesiti)
                 </h3>
                 <ul className="list-disc pl-6 text-slate-700 space-y-2">
-                  <li><strong>Competenza linguistica e ragionamento logico:</strong> {quizQuestions.filter(q => q.category.includes("linguistica")).length} quesiti</li>
-                  <li><strong>Cultura letteraria, storico-sociale e geografica:</strong> {quizQuestions.filter(q => q.category.includes("letteraria")).length} quesiti</li>
-                  <li><strong>Cultura matematico-scientifica:</strong> {quizQuestions.filter(q => q.category.includes("matematico")).length} quesiti</li>
+                  <li><strong>Competenza linguistica e ragionamento logico:</strong> 40 quesiti</li>
+                  <li><strong>Cultura letteraria, storico-sociale e geografica:</strong> 20 quesiti</li>
+                  <li><strong>Cultura matematico-scientifica:</strong> 20 quesiti</li>
                 </ul>
                 <div className="border-t border-slate-300 pt-4 mt-4">
                   <h3 className="font-bold text-slate-800 flex items-center gap-2 mb-2">

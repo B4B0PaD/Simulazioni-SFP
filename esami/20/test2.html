@@ -56,83 +56,283 @@
     const quizQuestions = [
       {
         category: "Competenza linguistica e ragionamento logico",
-        passage: "L'introduzione della tecnologia nelle aule scolastiche ha trasformato radicalmente il ruolo dell'insegnante. Non più unico detentore del sapere, il docente diventa un facilitatore dell'apprendimento, guidando gli studenti nella vasta rete di informazioni disponibili online. Tuttavia, questa transizione richiede un aggiornamento continuo delle competenze pedagogiche e digitali, senza le quali gli strumenti tecnologici rischiano di trasformarsi in mere distrazioni piuttosto che in reali risorse educative.",
-        question: "Secondo il brano, qual è il principale rischio legato all'uso della tecnologia in classe senza un'adeguata preparazione del docente?",
-        options: ["Che gli studenti superino l'insegnante in conoscenze informatiche.", "Che la tecnologia diventi una distrazione invece di una risorsa.", "Che il ruolo dell'insegnante venga completamente sostituito dai computer.", "Che le scuole debbano spendere troppi fondi per l'aggiornamento.", "Che la rete di informazioni online risulti inaffidabile."],
-        correctAnswerIndex: 1,
-        explanation: "Il testo afferma esplicitamente che senza le adeguate competenze pedagogiche e digitali, «gli strumenti tecnologici rischiano di trasformarsi in mere distrazioni piuttosto che in reali risorse educative»."
-      },
-      {
-        category: "Competenza linguistica e ragionamento logico",
-        passage: "",
-        question: "\"Tutti gli alberi hanno le radici. Il pino è un albero. Quindi il pino ha le radici.\" Quale delle seguenti affermazioni segue la medesima struttura logica?",
-        options: ["Qualche mammifero vola. Il pipistrello è un mammifero. Quindi il pipistrello vola.", "Tutti i felini sono carnivori. Il gatto è un felino. Quindi il gatto è carnivoro.", "Nessun uccello ha le squame. Il serpente ha le squame. Quindi il serpente non è un uccello.", "Se piove prendo l'ombrello. Non piove, quindi non prendo l'ombrello.", "Tutti i pesci nuotano. La balena nuota. Quindi la balena è un pesce."],
-        correctAnswerIndex: 1,
-        explanation: "Il sillogismo originale è del tipo: 'Tutti gli A sono B. C è un A. Quindi C è B.' L'opzione corretta segue esattamente la medesima struttura deduttiva."
-      },
-      {
-        category: "Competenza linguistica e ragionamento logico",
-        passage: "",
-        question: "In quale delle seguenti frasi è presente un errore nell'uso dei modi verbali?",
-        options: ["Pensavo che tu fossi già partito per Roma.", "Sebbene sia stanco, continuerò a studiare.", "Credo che ieri sera hai mangiato troppo.", "Vorrei che mi ascoltassi con più attenzione.", "È necessario che tutti consegnino il compito in orario."],
+        passage: "L'introduzione della tecnologia nelle scuole primarie ha suscitato dibattiti accesi. Da un lato, i sostenitori affermano che i dispositivi digitali preparano i bambini al futuro e personalizzano l'apprendimento. Dall'altro, i critici avvertono sui rischi di dipendenza, riduzione dell'attenzione e isolamento sociale. Tuttavia, la maggior parte degli esperti concorda che il problema non risieda nello strumento in sé, ma nell'uso pedagogico che se ne fa: senza una formazione adeguata degli insegnanti, anche il miglior tablet diventa un semplice giocattolo o una distrazione.",
+        question: "Secondo il brano, qual è l'opinione prevalente degli esperti sull'uso della tecnologia a scuola?",
+        options: [
+          "I dispositivi digitali causano inevitabilmente isolamento sociale nei bambini.",
+          "I tablet sono semplici giocattoli che distraggono gli alunni.",
+          "L'efficacia della tecnologia dipende dalla formazione degli insegnanti e dall'uso pedagogico.",
+          "La tecnologia dovrebbe essere completamente vietata nelle scuole primarie.",
+          "L'introduzione dei dispositivi digitali risolve in modo automatico tutti i problemi formativi."
+        ],
         correctAnswerIndex: 2,
-        explanation: "Dopo il verbo 'credere', che esprime un'opinione personale, la proposizione subordinata richiede l'uso del congiuntivo. La forma grammaticalmente corretta è 'Credo che ieri sera tu abbia mangiato troppo'."
+        explanation: "Il brano specifica alla fine che gli esperti concordano sul fatto che il problema sia l'uso pedagogico e la necessità di una formazione adeguata per gli insegnanti."
       },
       {
         category: "Competenza linguistica e ragionamento logico",
         passage: "",
-        question: "\"Condizione sufficiente, ma non necessaria, affinché Marco superi l'esame è che studi almeno 4 ore al giorno\". In base a questa affermazione, quale deduzione è sicuramente vera?",
-        options: ["Se Marco ha superato l'esame, significa che ha studiato almeno 4 ore al giorno.", "Se Marco non studia almeno 4 ore al giorno, sicuramente non supererà l'esame.", "Marco può superare l'esame anche studiando meno di 4 ore al giorno.", "Se Marco studia 3 ore al giorno, supererà sicuramente l'esame.", "Studiare 4 ore al giorno è l'unico modo per superare l'esame."],
-        correctAnswerIndex: 2,
-        explanation: "Essendo lo studio di 4 ore una condizione 'non necessaria', significa che Marco ha la possibilità di superare l'esame anche attraverso altre strade (ad esempio, avendo già un'ottima preparazione di base)."
-      },
-      {
-        category: "Competenza linguistica e ragionamento logico",
-        passage: "",
-        question: "Quale numero completa logicamente la seguente serie logico-matematica? 2, 5, 11, 23, 47, ?",
-        options: ["94", "95", "93", "71", "101"],
+        question: "Individuare la coppia di termini che completa logicamente la seguente proporzione verbale: Libro : Biblioteca = X : Y",
+        options: [
+          "X = Capitolo; Y = Pagine",
+          "X = Albero; Y = Foresta",
+          "X = Lettore; Y = Scrittore",
+          "X = Quadro; Y = Cornice",
+          "X = Automobile; Y = Strada"
+        ],
         correctAnswerIndex: 1,
-        explanation: "La regola della sequenza consiste nel moltiplicare il numero precedente per 2 e aggiungere 1. Infatti: (47 * 2) + 1 = 95."
+        explanation: "La relazione logica è quella di un singolo elemento contenuto all'interno del suo insieme o luogo collettivo. Molti alberi formano una foresta, così come molti libri formano una biblioteca."
       },
       {
-        category: "Cultura letteraria, storico-sociale e geografica",
+        category: "Competenza linguistica e ragionamento logico",
         passage: "",
-        question: "Quale dei seguenti celebri autori è l'ideatore e scrittore del romanzo \"Il fu Mattia Pascal\"?",
-        options: ["Giovanni Verga", "Italo Svevo", "Luigi Pirandello", "Gabriele D'Annunzio", "Grazia Deledda"],
+        question: "Se è vera l'affermazione 'Solo se piove prendo l'ombrello', quale delle seguenti conclusioni è logicamente corretta?",
+        options: [
+          "Se non prendo l'ombrello, allora non piove.",
+          "Se prendo l'ombrello, allora certamente piove.",
+          "Se piove, prendo certamente l'ombrello.",
+          "A volte prendo l'ombrello anche se c'è il sole.",
+          "Prendo l'ombrello solo se non piove."
+        ],
+        correctAnswerIndex: 1,
+        explanation: "La frase 'Solo se A allora B' stabilisce che A è condizione necessaria per B (B implica A). Pertanto, se prendo l'ombrello (B), allora significa che necessariamente piove (A)."
+      },
+      {
+        category: "Competenza linguistica e ragionamento logico",
+        passage: "",
+        question: "Tutti i cigni sono bianchi. Bernardo è un cigno. Quale delle seguenti conclusioni è necessariamente vera?",
+        options: [
+          "Bernardo è nero.",
+          "Tutti gli animali bianchi sono cigni.",
+          "Bernardo è bianco.",
+          "Bernardo è un uccello.",
+          "Alcuni cigni non sono bianchi."
+        ],
         correctAnswerIndex: 2,
-        explanation: "\"Il fu Mattia Pascal\" è uno dei romanzi più famosi e rivoluzionari di Luigi Pirandello, incentrato sui temi dell'identità e della maschera sociale, pubblicato nel 1904."
+        explanation: "Sillogismo classico: se la proprietà dell'essere bianco appartiene a tutto l'insieme dei cigni, e Bernardo appartiene a tale insieme, anche Bernardo possiede necessariamente tale proprietà."
       },
       {
-        category: "Cultura letteraria, storico-sociale e geografica",
+        category: "Competenza linguistica e ragionamento logico",
         passage: "",
-        question: "In quale anno avvenne lo storico evento della caduta del Muro di Berlino?",
-        options: ["1989", "1991", "1985", "1961", "1993"],
+        question: "Qual è la negazione logica della proposizione: 'Tutti i gatti hanno la coda e miagolano'?",
+        options: [
+          "Nessun gatto ha la coda e miagola.",
+          "Almeno un gatto non ha la coda oppure non miagola.",
+          "Almeno un gatto non ha la coda e non miagola.",
+          "Tutti i gatti non hanno la coda e non miagolano.",
+          "Nessun gatto ha la coda o miagola."
+        ],
+        correctAnswerIndex: 1,
+        explanation: "Secondo le leggi di De Morgan, la negazione di una congiunzione universale (Tutti hanno A e B) diventa un'affermazione esistenziale con una disgiunzione (Almeno uno non ha A oppure non ha B)."
+      },
+      {
+        category: "Competenza linguistica e ragionamento logico",
+        passage: "",
+        question: "Nella frase 'Marta ha letto il libro che le ho prestato', che funzione sintattica svolge il pronome relativo 'che'?",
+        options: [
+          "Soggetto",
+          "Complemento di termine",
+          "Complemento oggetto",
+          "Complemento di specificazione",
+          "Apposizione"
+        ],
+        correctAnswerIndex: 2,
+        explanation: "Il 'che' sostituisce 'il libro' nella proposizione relativa subordinata ('io ho prestato il libro a lei'). Quindi risponde alla domanda 'chi/che cosa?' e funge da complemento oggetto."
+      },
+      {
+        category: "Competenza linguistica e ragionamento logico",
+        passage: "",
+        question: "In una classe di 30 alunni, 18 studiano inglese e 15 studiano francese. Sapendo che 5 non studiano nessuna delle due lingue, quanti sono gli alunni che le studiano entrambe?",
+        options: [
+          "8",
+          "5",
+          "10",
+          "3",
+          "12"
+        ],
         correctAnswerIndex: 0,
-        explanation: "Il Muro di Berlino, che divise fisicamente e ideologicamente la città per decenni diventando il simbolo della Guerra Fredda, cadde il 9 novembre 1989."
+        explanation: "Gli alunni che studiano almeno una lingua sono 30 - 5 = 25. Sommando inglese e francese si ottiene 18 + 15 = 33. La differenza (33 - 25 = 8) rappresenta l'intersezione degli insiemi, ovvero chi studia entrambe le lingue."
+      },
+      {
+        category: "Competenza linguistica e ragionamento logico",
+        passage: "",
+        question: "Individuare il numero mancante nella seguente serie logica: 2, 6, 12, 20, 30, ?",
+        options: [
+          "36",
+          "42",
+          "40",
+          "48",
+          "50"
+        ],
+        correctAnswerIndex: 1,
+        explanation: "Le differenze tra i numeri aumentano di 2 a ogni passaggio: +4 (6-2), +6 (12-6), +8 (20-12), +10 (30-20). Il prossimo incremento sarà +12, quindi 30 + 12 = 42."
+      },
+      {
+        category: "Competenza linguistica e ragionamento logico",
+        passage: "",
+        question: "Quale figura retorica è utilizzata nell'espressione 'un silenzio assordante'?",
+        options: [
+          "Metafora",
+          "Similitudine",
+          "Ossimoro",
+          "Sineddoche",
+          "Litote"
+        ],
+        correctAnswerIndex: 2,
+        explanation: "L'ossimoro consiste nell'accostare due termini di senso opposto e logicamente incompatibili nella stessa espressione concettuale."
+      },
+      {
+        category: "Competenza linguistica e ragionamento logico",
+        passage: "",
+        question: "Anna è la madre di Beatrice. Carlo è il fratello di Anna. Davide è il figlio di Beatrice. Qual è il grado di parentela tra Carlo e Davide?",
+        options: [
+          "Zio e nipote",
+          "Nonno e nipote",
+          "Cugini",
+          "Prozio e pronipote",
+          "Fratelli"
+        ],
+        correctAnswerIndex: 3,
+        explanation: "Carlo è fratello della madre (Anna) di Beatrice, quindi è lo zio di Beatrice. Davide è figlio di Beatrice, di conseguenza Carlo è il prozio (zio materno della madre) di Davide."
       },
       {
         category: "Cultura letteraria, storico-sociale e geografica",
         passage: "",
-        question: "Individuare tra le seguenti l'unica regione italiana della penisola che NON è bagnata dal mare:",
-        options: ["Basilicata", "Veneto", "Molise", "Umbria", "Marche"],
-        correctAnswerIndex: 3,
-        explanation: "L'Umbria è l'unica regione dell'Italia peninsulare (escludendo quindi le regioni dell'arco alpino come Valle d'Aosta e Trentino) a non avere sbocchi sul mare."
-      },
-      {
-        category: "Cultura matematico-scientifica",
-        passage: "",
-        question: "Se un articolo costa inizialmente 80 euro e il negoziante decide di applicare uno sconto del 20%, qual è il prezzo di vendita finale?",
-        options: ["60 euro", "64 euro", "68 euro", "70 euro", "72 euro"],
+        question: "Chi è l'autore della celebre raccolta poetica 'Ossi di seppia' pubblicata nel 1925?",
+        options: [
+          "Giuseppe Ungaretti",
+          "Eugenio Montale",
+          "Umberto Saba",
+          "Giovanni Pascoli",
+          "Gabriele D'Annunzio"
+        ],
         correctAnswerIndex: 1,
-        explanation: "Il 20% di 80 euro si calcola facendo (80 * 20) / 100 = 16. Sottraendo i 16 euro di sconto dal prezzo iniziale (80 - 16) si ottengono 64 euro."
+        explanation: "Gli 'Ossi di seppia' è la prima e una delle più famose raccolte di Eugenio Montale, opera centrale del Novecento poetico italiano."
+      },
+      {
+        category: "Cultura letteraria, storico-sociale e geografica",
+        passage: "",
+        question: "In quale anno è entrata formalmente in vigore la Costituzione della Repubblica Italiana?",
+        options: [
+          "1946",
+          "1947",
+          "1948",
+          "1950",
+          "1945"
+        ],
+        correctAnswerIndex: 2,
+        explanation: "La Costituzione italiana è stata approvata dall'Assemblea Costituente nel dicembre 1947 ed è entrata in vigore il 1º gennaio 1948."
+      },
+      {
+        category: "Cultura letteraria, storico-sociale e geografica",
+        passage: "",
+        question: "Quale delle seguenti capitali europee è attraversata dal fiume Danubio?",
+        options: [
+          "Parigi",
+          "Madrid",
+          "Londra",
+          "Budapest",
+          "Praga"
+        ],
+        correctAnswerIndex: 3,
+        explanation: "Il Danubio è uno dei principali fiumi europei e attraversa ben quattro capitali: Vienna, Bratislava, Budapest e Belgrado."
+      },
+      {
+        category: "Cultura letteraria, storico-sociale e geografica",
+        passage: "",
+        question: "Dal punto di vista della periodizzazione storica, quale evento segna convenzionalmente la fine dell'età moderna e l'inizio di quella contemporanea?",
+        options: [
+          "La scoperta dell'America (1492)",
+          "La caduta dell'Impero Romano d'Occidente (476 d.C.)",
+          "La Rivoluzione Francese (1789)",
+          "La fine della Prima Guerra Mondiale (1918)",
+          "Il Congresso di Vienna (1815)"
+        ],
+        correctAnswerIndex: 2,
+        explanation: "Nella storiografia tradizionale europea, la Rivoluzione Francese (assieme alla Rivoluzione Industriale) è considerata lo spartiacque tra l'età moderna e l'inizio dell'età contemporanea."
+      },
+      {
+        category: "Cultura letteraria, storico-sociale e geografica",
+        passage: "",
+        question: "In quale grande poema epico dell'antichità si narra il lungo viaggio di ritorno in patria dell'eroe protagonista dopo la distruzione di Troia?",
+        options: [
+          "Iliade",
+          "Eneide",
+          "Odissea",
+          "Teogonia",
+          "Le Argonautiche"
+        ],
+        correctAnswerIndex: 2,
+        explanation: "L'Odissea, attribuita ad Omero, narra le avventure e il decennale viaggio di Odisseo (Ulisse) per fare ritorno alla sua isola nativa, Itaca, dopo la guerra di Troia."
       },
       {
         category: "Cultura matematico-scientifica",
         passage: "",
-        question: "Qual è l'organo del corpo umano incaricato della produzione dell'ormone insulina?",
-        options: ["Fegato", "Reni", "Pancreas", "Milza", "Cistifellea"],
+        question: "Un negozio applica uno sconto del 20% su un articolo il cui prezzo di listino è 25 euro. Qual è il prezzo finale del prodotto dopo aver applicato lo sconto?",
+        options: [
+          "20 euro",
+          "15 euro",
+          "22 euro",
+          "18 euro",
+          "21 euro"
+        ],
+        correctAnswerIndex: 0,
+        explanation: "Il 20% equivale a un quinto del totale. Il 20% di 25 euro è 5 euro (25 / 5 = 5). Sottraendo lo sconto al prezzo di partenza si ottiene: 25 - 5 = 20 euro."
+      },
+      {
+        category: "Cultura matematico-scientifica",
+        passage: "",
+        question: "Qual è l'area di un triangolo rettangolo i cui cateti misurano rispettivamente 6 cm e 8 cm?",
+        options: [
+          "48 cm²",
+          "14 cm²",
+          "24 cm²",
+          "10 cm²",
+          "36 cm²"
+        ],
         correctAnswerIndex: 2,
-        explanation: "L'insulina è un ormone vitale prodotto dalle cellule beta delle isole di Langerhans, situate nel pancreas. È essenziale per regolare il livello di glucosio nel sangue."
+        explanation: "In un triangolo rettangolo, l'area si calcola moltiplicando i cateti tra loro e dividendo per due: (b x h) / 2 = (6 x 8) / 2 = 48 / 2 = 24 cm²."
+      },
+      {
+        category: "Cultura matematico-scientifica",
+        passage: "",
+        question: "In biologia, quale organello cellulare è comunemente definito la 'centrale energetica' della cellula eucariote, essendo la sede principale della respirazione cellulare?",
+        options: [
+          "Ribosoma",
+          "Mitocondrio",
+          "Lisosoma",
+          "Apparato di Golgi",
+          "Reticolo endoplasmatico"
+        ],
+        correctAnswerIndex: 1,
+        explanation: "I mitocondri sono organelli dotati di un proprio DNA, specializzati nella produzione di energia sotto forma di ATP attraverso il processo della respirazione cellulare aerobica."
+      },
+      {
+        category: "Cultura matematico-scientifica",
+        passage: "",
+        question: "In fisica e chimica, quale termine definisce correttamente il passaggio di stato dell'acqua (o di altra sostanza) dallo stato liquido allo stato gassoso?",
+        options: [
+          "Condensazione",
+          "Fusione",
+          "Sublimazione",
+          "Evaporazione",
+          "Brinamento"
+        ],
+        correctAnswerIndex: 3,
+        explanation: "L'evaporazione (o ebollizione, all'interno del più ampio termine 'vaporizzazione') è la trasformazione della materia dallo stato liquido a quello aeriforme."
+      },
+      {
+        category: "Cultura matematico-scientifica",
+        passage: "",
+        question: "Qual è il valore numerico dell'incognita 'x' che soddisfa la seguente equazione di primo grado: 3x - 5 = 10?",
+        options: [
+          "x = 5",
+          "x = 3",
+          "x = -5",
+          "x = 15",
+          "x = 2"
+        ],
+        correctAnswerIndex: 0,
+        explanation: "Si isola l'incognita sommando 5 ad entrambi i membri (3x = 10 + 5), ottenendo 3x = 15. Infine, dividendo per 3, risulta x = 15 / 3 = 5."
       }
     ];
 
@@ -273,9 +473,9 @@
                   <ListOrdered className="w-5 h-5 text-indigo-600"/> Struttura del Test ({quizQuestions.length} Quesiti)
                 </h3>
                 <ul className="list-disc pl-6 text-slate-700 space-y-2">
-                  <li><strong>Competenza linguistica e ragionamento logico:</strong> {quizQuestions.filter(q => q.category.includes("linguistica")).length} quesiti</li>
-                  <li><strong>Cultura letteraria, storico-sociale e geografica:</strong> {quizQuestions.filter(q => q.category.includes("letteraria")).length} quesiti</li>
-                  <li><strong>Cultura matematico-scientifica:</strong> {quizQuestions.filter(q => q.category.includes("matematico")).length} quesiti</li>
+                  <li><strong>Competenza linguistica e ragionamento logico:</strong> 40 quesiti</li>
+                  <li><strong>Cultura letteraria, storico-sociale e geografica:</strong> 20 quesiti</li>
+                  <li><strong>Cultura matematico-scientifica:</strong> 20 quesiti</li>
                 </ul>
                 <div className="border-t border-slate-300 pt-4 mt-4">
                   <h3 className="font-bold text-slate-800 flex items-center gap-2 mb-2">

@@ -56,83 +56,143 @@
     const quizQuestions = [
       {
         category: "Competenza linguistica e ragionamento logico",
-        passage: "L'introduzione della tecnologia nelle aule scolastiche ha trasformato radicalmente il ruolo dell'insegnante. Non più unico detentore del sapere, il docente diventa un facilitatore dell'apprendimento, guidando gli studenti nella vasta rete di informazioni disponibili online. Tuttavia, questa transizione richiede un aggiornamento continuo delle competenze pedagogiche e digitali, senza le quali gli strumenti tecnologici rischiano di trasformarsi in mere distrazioni piuttosto che in reali risorse educative.",
-        question: "Secondo il brano, qual è il principale rischio legato all'uso della tecnologia in classe senza un'adeguata preparazione del docente?",
-        options: ["Che gli studenti superino l'insegnante in conoscenze informatiche.", "Che la tecnologia diventi una distrazione invece di una risorsa.", "Che il ruolo dell'insegnante venga completamente sostituito dai computer.", "Che le scuole debbano spendere troppi fondi per l'aggiornamento.", "Che la rete di informazioni online risulti inaffidabile."],
-        correctAnswerIndex: 1,
-        explanation: "Il testo afferma esplicitamente che senza le adeguate competenze pedagogiche e digitali, «gli strumenti tecnologici rischiano di trasformarsi in mere distrazioni piuttosto che in reali risorse educative»."
-      },
-      {
-        category: "Competenza linguistica e ragionamento logico",
-        passage: "",
-        question: "\"Tutti gli alberi hanno le radici. Il pino è un albero. Quindi il pino ha le radici.\" Quale delle seguenti affermazioni segue la medesima struttura logica?",
-        options: ["Qualche mammifero vola. Il pipistrello è un mammifero. Quindi il pipistrello vola.", "Tutti i felini sono carnivori. Il gatto è un felino. Quindi il gatto è carnivoro.", "Nessun uccello ha le squame. Il serpente ha le squame. Quindi il serpente non è un uccello.", "Se piove prendo l'ombrello. Non piove, quindi non prendo l'ombrello.", "Tutti i pesci nuotano. La balena nuota. Quindi la balena è un pesce."],
-        correctAnswerIndex: 1,
-        explanation: "Il sillogismo originale è del tipo: 'Tutti gli A sono B. C è un A. Quindi C è B.' L'opzione corretta segue esattamente la medesima struttura deduttiva."
-      },
-      {
-        category: "Competenza linguistica e ragionamento logico",
-        passage: "",
-        question: "In quale delle seguenti frasi è presente un errore nell'uso dei modi verbali?",
-        options: ["Pensavo che tu fossi già partito per Roma.", "Sebbene sia stanco, continuerò a studiare.", "Credo che ieri sera hai mangiato troppo.", "Vorrei che mi ascoltassi con più attenzione.", "È necessario che tutti consegnino il compito in orario."],
-        correctAnswerIndex: 2,
-        explanation: "Dopo il verbo 'credere', che esprime un'opinione personale, la proposizione subordinata richiede l'uso del congiuntivo. La forma grammaticalmente corretta è 'Credo che ieri sera tu abbia mangiato troppo'."
-      },
-      {
-        category: "Competenza linguistica e ragionamento logico",
-        passage: "",
-        question: "\"Condizione sufficiente, ma non necessaria, affinché Marco superi l'esame è che studi almeno 4 ore al giorno\". In base a questa affermazione, quale deduzione è sicuramente vera?",
-        options: ["Se Marco ha superato l'esame, significa che ha studiato almeno 4 ore al giorno.", "Se Marco non studia almeno 4 ore al giorno, sicuramente non supererà l'esame.", "Marco può superare l'esame anche studiando meno di 4 ore al giorno.", "Se Marco studia 3 ore al giorno, supererà sicuramente l'esame.", "Studiare 4 ore al giorno è l'unico modo per superare l'esame."],
-        correctAnswerIndex: 2,
-        explanation: "Essendo lo studio di 4 ore una condizione 'non necessaria', significa che Marco ha la possibilità di superare l'esame anche attraverso altre strade (ad esempio, avendo già un'ottima preparazione di base)."
-      },
-      {
-        category: "Competenza linguistica e ragionamento logico",
-        passage: "",
-        question: "Quale numero completa logicamente la seguente serie logico-matematica? 2, 5, 11, 23, 47, ?",
-        options: ["94", "95", "93", "71", "101"],
-        correctAnswerIndex: 1,
-        explanation: "La regola della sequenza consiste nel moltiplicare il numero precedente per 2 e aggiungere 1. Infatti: (47 * 2) + 1 = 95."
-      },
-      {
-        category: "Cultura letteraria, storico-sociale e geografica",
-        passage: "",
-        question: "Quale dei seguenti celebri autori è l'ideatore e scrittore del romanzo \"Il fu Mattia Pascal\"?",
-        options: ["Giovanni Verga", "Italo Svevo", "Luigi Pirandello", "Gabriele D'Annunzio", "Grazia Deledda"],
-        correctAnswerIndex: 2,
-        explanation: "\"Il fu Mattia Pascal\" è uno dei romanzi più famosi e rivoluzionari di Luigi Pirandello, incentrato sui temi dell'identità e della maschera sociale, pubblicato nel 1904."
-      },
-      {
-        category: "Cultura letteraria, storico-sociale e geografica",
-        passage: "",
-        question: "In quale anno avvenne lo storico evento della caduta del Muro di Berlino?",
-        options: ["1989", "1991", "1985", "1961", "1993"],
-        correctAnswerIndex: 0,
-        explanation: "Il Muro di Berlino, che divise fisicamente e ideologicamente la città per decenni diventando il simbolo della Guerra Fredda, cadde il 9 novembre 1989."
-      },
-      {
-        category: "Cultura letteraria, storico-sociale e geografica",
-        passage: "",
-        question: "Individuare tra le seguenti l'unica regione italiana della penisola che NON è bagnata dal mare:",
-        options: ["Basilicata", "Veneto", "Molise", "Umbria", "Marche"],
+        passage: "La memoria di lavoro è un sistema a capacità limitata responsabile dell'elaborazione temporanea e della memorizzazione delle informazioni necessarie per compiti cognitivi complessi come la comprensione del linguaggio, l'apprendimento e il ragionamento. Secondo il modello di Baddeley e Hitch (1974), essa non è un magazzino passivo, ma un sistema multicomponenziale che include un esecutivo centrale, che coordina l'attività, e dei servosistemi, tra cui il circuito fonologico e il taccuino visuo-spaziale, dedicati a specifiche tipologie di input.",
+        question: "In base al brano proposto, quale delle seguenti affermazioni sulla memoria di lavoro è CORRETTA?",
+        options: [
+          "È un magazzino puramente passivo che archivia informazioni per un tempo indeterminato.",
+          "È composta esclusivamente da un esecutivo centrale senza alcun altro sottosistema.",
+          "Ha una capacità illimitata che permette di eseguire infiniti compiti cognitivi contemporaneamente.",
+          "Si occupa sia della memorizzazione temporanea sia dell'elaborazione delle informazioni per compiti complessi.",
+          "Il taccuino visuo-spaziale è il nucleo centrale che coordina tutte le altre attività di memoria."
+        ],
         correctAnswerIndex: 3,
-        explanation: "L'Umbria è l'unica regione dell'Italia peninsulare (escludendo quindi le regioni dell'arco alpino come Valle d'Aosta e Trentino) a non avere sbocchi sul mare."
+        explanation: "Il brano specifica chiaramente che la memoria di lavoro è responsabile sia dell'elaborazione temporanea sia della memorizzazione per compiti complessi, e non è un magazzino passivo."
       },
       {
-        category: "Cultura matematico-scientifica",
+        category: "Competenza linguistica e ragionamento logico",
         passage: "",
-        question: "Se un articolo costa inizialmente 80 euro e il negoziante decide di applicare uno sconto del 20%, qual è il prezzo di vendita finale?",
-        options: ["60 euro", "64 euro", "68 euro", "70 euro", "72 euro"],
-        correctAnswerIndex: 1,
-        explanation: "Il 20% di 80 euro si calcola facendo (80 * 20) / 100 = 16. Sottraendo i 16 euro di sconto dal prezzo iniziale (80 - 16) si ottengono 64 euro."
-      },
-      {
-        category: "Cultura matematico-scientifica",
-        passage: "",
-        question: "Qual è l'organo del corpo umano incaricato della produzione dell'ormone insulina?",
-        options: ["Fegato", "Reni", "Pancreas", "Milza", "Cistifellea"],
+        question: "Considerando vere le premesse 'Tutti i maestri sono pazienti' e 'Alcuni sportivi sono maestri', quale delle seguenti deduzioni è logicamente ineccepibile?",
+        options: [
+          "Nessuno sportivo è paziente",
+          "Tutti gli sportivi sono pazienti",
+          "Alcuni sportivi sono pazienti",
+          "Tutti i pazienti sono sportivi",
+          "Alcuni maestri non sono pazienti"
+        ],
         correctAnswerIndex: 2,
-        explanation: "L'insulina è un ormone vitale prodotto dalle cellule beta delle isole di Langerhans, situate nel pancreas. È essenziale per regolare il livello di glucosio nel sangue."
+        explanation: "Trattandosi di un sillogismo: se la classe dei 'maestri' è interamente contenuta in quella dei 'pazienti', e alcuni 'sportivi' fanno parte dei 'maestri', allora questi ultimi devono necessariamente essere anche 'pazienti'. Dunque, alcuni sportivi sono pazienti."
+      },
+      {
+        category: "Competenza linguistica e ragionamento logico",
+        passage: "",
+        question: "Quale tra i seguenti termini rappresenta il sinonimo più corretto per il verbo 'procrastinare'?",
+        options: [
+          "Anticipare",
+          "Annullare",
+          "Differire",
+          "Affrontare",
+          "Dimenticare"
+        ],
+        correctAnswerIndex: 2,
+        explanation: "Procrastinare significa rinviare o rimandare a un altro momento un'azione o una decisione; il sinonimo esatto in questo elenco è 'Differire'."
+      },
+      {
+        category: "Competenza linguistica e ragionamento logico",
+        passage: "",
+        question: "Individua il numero che completa correttamente la seguente serie numerica: 2, 6, 12, 20, ?",
+        options: [
+          "24",
+          "28",
+          "30",
+          "32",
+          "36"
+        ],
+        correctAnswerIndex: 2,
+        explanation: "La serie segue una logica di incrementi crescenti: +4 (da 2 a 6), +6 (da 6 a 12), +8 (da 12 a 20). L'incremento successivo deve essere +10. Quindi 20 + 10 = 30."
+      },
+      {
+        category: "Competenza linguistica e ragionamento logico",
+        passage: "",
+        question: "Completa in modo logico la seguente proporzione verbale: 'Albero : Foglie = Libro : ?'",
+        options: [
+          "Pagine",
+          "Copertina",
+          "Scrittore",
+          "Libreria",
+          "Inchiostro"
+        ],
+        correctAnswerIndex: 0,
+        explanation: "Le foglie sono gli elementi molteplici che compongono la chioma dell'albero; analogamente, le pagine sono gli elementi plurimi che costituiscono la parte interna e leggibile del libro."
+      },
+      {
+        category: "Cultura letteraria, storico-sociale e geografica",
+        passage: "",
+        question: "In quale anno è entrata in vigore la Costituzione della Repubblica Italiana?",
+        options: [
+          "1945",
+          "1946",
+          "1947",
+          "1948",
+          "1950"
+        ],
+        correctAnswerIndex: 3,
+        explanation: "La Costituzione Italiana è stata promulgata dal Capo provvisorio dello Stato Enrico De Nicola il 27 dicembre 1947 ed è entrata in vigore il 1º gennaio 1948."
+      },
+      {
+        category: "Cultura letteraria, storico-sociale e geografica",
+        passage: "",
+        question: "Quale celebre autore italiano ha teorizzato la poetica del 'Fanciullino', secondo cui in ogni uomo si nasconde uno spirito infantile capace di stupirsi di fronte alle piccole cose?",
+        options: [
+          "Giacomo Leopardi",
+          "Giovanni Pascoli",
+          "Gabriele D'Annunzio",
+          "Luigi Pirandello",
+          "Italo Svevo"
+        ],
+        correctAnswerIndex: 1,
+        explanation: "'Il fanciullino' è un'opera saggistica del 1897 di Giovanni Pascoli, che racchiude il cuore della sua visione poetica ed estetica."
+      },
+      {
+        category: "Cultura letteraria, storico-sociale e geografica",
+        passage: "",
+        question: "Quale delle seguenti regioni italiane NON è bagnata dal mare?",
+        options: [
+          "Campania",
+          "Umbria",
+          "Basilicata",
+          "Molise",
+          "Veneto"
+        ],
+        correctAnswerIndex: 1,
+        explanation: "L'Umbria è l'unica regione dell'Italia peninsulare a non essere bagnata dal mare (le altre regioni senza sbocco marittimo sono in Italia settentrionale: Valle d'Aosta, Piemonte, Lombardia, Trentino-Alto Adige)."
+      },
+      {
+        category: "Cultura matematico-scientifica",
+        passage: "",
+        question: "Lanciando contemporaneamente due dadi a sei facce non truccati, qual è la probabilità che la somma dei numeri usciti sia esattamente 7?",
+        options: [
+          "1/6",
+          "1/12",
+          "1/36",
+          "7/36",
+          "1/7"
+        ],
+        correctAnswerIndex: 0,
+        explanation: "I casi totali lanciando due dadi sono 6 x 6 = 36. Le combinazioni che danno somma 7 sono 6: (1,6), (2,5), (3,4), (4,3), (5,2), (6,1). La probabilità è quindi 6/36, che semplificato risulta 1/6."
+      },
+      {
+        category: "Cultura matematico-scientifica",
+        passage: "",
+        question: "In biologia, quale organulo cellulare è considerato la 'centrale energetica' della cellula eucariotica, essendo la sede principale della produzione di ATP?",
+        options: [
+          "Ribosoma",
+          "Apparato di Golgi",
+          "Mitocondrio",
+          "Lisosoma",
+          "Reticolo endoplasmatico"
+        ],
+        correctAnswerIndex: 2,
+        explanation: "I mitocondri sono organuli presenti nel citoplasma di quasi tutte le cellule eucariote, specializzati nella respirazione cellulare e nella sintesi di ATP, fornendo energia all'organismo."
       }
     ];
 
@@ -273,9 +333,9 @@
                   <ListOrdered className="w-5 h-5 text-indigo-600"/> Struttura del Test ({quizQuestions.length} Quesiti)
                 </h3>
                 <ul className="list-disc pl-6 text-slate-700 space-y-2">
-                  <li><strong>Competenza linguistica e ragionamento logico:</strong> {quizQuestions.filter(q => q.category.includes("linguistica")).length} quesiti</li>
-                  <li><strong>Cultura letteraria, storico-sociale e geografica:</strong> {quizQuestions.filter(q => q.category.includes("letteraria")).length} quesiti</li>
-                  <li><strong>Cultura matematico-scientifica:</strong> {quizQuestions.filter(q => q.category.includes("matematico")).length} quesiti</li>
+                  <li><strong>Competenza linguistica e ragionamento logico:</strong> 40 quesiti</li>
+                  <li><strong>Cultura letteraria, storico-sociale e geografica:</strong> 20 quesiti</li>
+                  <li><strong>Cultura matematico-scientifica:</strong> 20 quesiti</li>
                 </ul>
                 <div className="border-t border-slate-300 pt-4 mt-4">
                   <h3 className="font-bold text-slate-800 flex items-center gap-2 mb-2">
