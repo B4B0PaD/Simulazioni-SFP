@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simulazione Ufficiale Test SFP</title>
+  
+  <!-- Tailwind CSS per lo styling -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- React & ReactDOM (UMD Build) -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  
+  <!-- Babel (Compila il JSX nel browser in tempo reale) -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <style>
+    .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 10px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased overflow-x-hidden">
+  
+  <div id="root"></div>
+
+  <!-- Il nostro codice React convertito per funzionare con Babel Standalone -->
+  <script type="text/babel">
+    const { useState, useEffect, useRef } = React;
+
+    // --- ICONE SVG ---
+    const IconWrapper = ({ children, className }) => (
+      <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        {children}
+      </svg>
+    );
+    const BookOpen = ({className}) => <IconWrapper className={className}><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></IconWrapper>;
+    const CheckCircle2 = ({className}) => <IconWrapper className={className}><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></IconWrapper>;
+    const XCircle = ({className}) => <IconWrapper className={className}><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></IconWrapper>;
+    const RotateCcw = ({className}) => <IconWrapper className={className}><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></IconWrapper>;
+    const Award = ({className}) => <IconWrapper className={className}><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></IconWrapper>;
+    const Play = ({className}) => <IconWrapper className={className}><polygon points="5 3 19 12 5 21 5 3"/></IconWrapper>;
+    const ListOrdered = ({className}) => <IconWrapper className={className}><line x1="10" x2="21" y1="6" y2="6"/><line x1="10" x2="21" y1="12" y2="12"/><line x1="10" x2="21" y1="18" y2="18"/><path d="M4 6h1v4"/><path d="M4 10h2"/><path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"/></IconWrapper>;
+    const BrainCircuit = ({className}) => <IconWrapper className={className}><path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"/><path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z"/><path d="M15 13h4.5a2 2 0 0 1 1.9 1.3"/><path d="M9 13H4.5a2 2 0 0 0-1.9 1.3"/><path d="M15 17h.01"/><path d="M9 17h.01"/></IconWrapper>;
+    const AlertTriangle = ({className}) => <IconWrapper className={className}><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></IconWrapper>;
+    const LayoutGrid = ({className}) => <IconWrapper className={className}><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></IconWrapper>;
+    const History = ({className}) => <IconWrapper className={className}><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></IconWrapper>;
+    const ChevronLeft = ({className}) => <IconWrapper className={className}><path d="m15 18-6-6 6-6"/></IconWrapper>;
+    const ChevronRight = ({className}) => <IconWrapper className={className}><path d="m9 18 6-6-6-6"/></IconWrapper>;
+    const Send = ({className}) => <IconWrapper className={className}><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></IconWrapper>;
+    const X = ({className}) => <IconWrapper className={className}><path d="M18 6 6 18"/><path d="m6 6 12 12"/></IconWrapper>;
+
+    // --- DATI DELLA SIMULAZIONE ---
+    const quizQuestions = [
+      {
+        category: "Competenza linguistica e ragionamento logico",
+        passage: "",
+        question: "Se è vero che 'Nessun mammifero ha le piume', quale delle seguenti affermazioni è certamente vera?",
+        options: [
+          "Tutti gli animali con le piume non sono mammiferi.",
+          "Alcuni mammiferi hanno le piume.",
+          "Tutti gli animali senza piume sono mammiferi.",
+          "Nessun animale con le piume è un uccello.",
+          "Alcuni animali con le piume sono mammiferi."
+        ],
+        correctAnswerIndex: 0,
+        explanation: "La proposizione 'Nessun mammifero ha le piume' equivale logicamente a dire che l'intersezione tra l'insieme dei mammiferi e l'insieme degli animali con le piume è vuota. Dunque, se un animale ha le piume, non può logicamente appartenere all'insieme dei mammiferi."
+      },
+      {
+        category: "Competenza linguistica e ragionamento logico",
+        passage: "",
+        question: "Completare la seguente serie numerica: 3, 9, 11, 33, 35, 105, ?",
+        options: ["107", "315", "110", "109", "317"],
+        correctAnswerIndex: 0,
+        explanation: "La serie segue una logica ritmica e alternata: il primo numero viene moltiplicato per 3, poi al risultato si somma 2. (3×3=9; 9+2=11; 11×3=33; 33+2=35; 35×3=105). Il prossimo passo matematico logico è 105 + 2 = 107."
+      },
+      {
+        category: "Competenza linguistica e ragionamento logico",
+        passage: "L'educazione è il grande motore dello sviluppo personale. È grazie all'educazione che la figlia di un contadino può diventare medico, che il figlio di un minatore può diventare dirigente della miniera, che il figlio di braccianti agricoli può diventare presidente di una grande nazione. Non è ciò che ci viene dato, ma la capacità di valorizzare al meglio ciò che abbiamo che distingue una persona dall'altra.",
+        question: "In base al brano appena letto, quale delle seguenti affermazioni rappresenta meglio la tesi di fondo e il pensiero dell'autore?",
+        options: [
+          "L'educazione permette di superare i limiti imposti dalle proprie origini sociali ed economiche.",
+          "I figli dei contadini diventano obbligatoriamente dei medici se studiano con profitto.",
+          "L'educazione è un dono naturale che viene elargito solo ad alcune persone predestinate alla nascita.",
+          "Lo sviluppo personale dipende esclusivamente ed unicamente dalle ricchezze materiali che si sono accumulate.",
+          "Solo ed esclusivamente chi proviene da famiglie umili ha la vera possibilità di diventare presidente."
+        ],
+        correctAnswerIndex: 0,
+        explanation: "L'autore sottolinea chiaramente, attraverso diversi esempi, come l'educazione sia lo strumento centrale (definito 'motore') che consente agli individui, indipendentemente dalla loro estrazione sociale, di emanciparsi e raggiungere obiettivi personali prima preclusi."
+      },
+      {
+        category: "Competenza linguistica e ragionamento logico",
+        passage: "",
+        question: "Individuare tra le seguenti alternative la parola che NON è sinonimo del termine 'Abissale':",
+        options: ["Superficiale", "Profondo", "Sconfinato", "Insondabile", "Incommensurabile"],
+        correctAnswerIndex: 0,
+        explanation: "L'aggettivo 'Superficiale' è il contrario (antonimo) di 'abissale', mentre le altre opzioni fornite sono tutti sinonimi coerenti che indicano una grandissima e sterminata profondità o vastità spaziale/concettuale."
+      },
+      {
+        category: "Competenza linguistica e ragionamento logico",
+        passage: "",
+        question: "In una scatola completamente chiusa ci sono 10 palline rosse, 8 blu e 6 verdi. Qual è il numero minimo esatto di palline che bisogna estrarre (alla cieca) per avere l'assoluta certezza di averne pescata almeno una di colore verde?",
+        options: ["19", "18", "7", "15", "17"],
+        correctAnswerIndex: 0,
+        explanation: "Per avere la matematica certezza di pescare almeno una pallina verde, bisogna analizzare lo scenario più avverso possibile: pescare accidentalmente prima tutte le rosse (10) e poi tutte le blu (8), per un totale di 18 palline estratte. La diciannovesima (19) pallina estratta sarà obbligatoriamente verde."
+      },
+      {
+        category: "Competenza linguistica e ragionamento logico",
+        passage: "",
+        question: "Scegli l'alternativa che completa in modo logicamente ed etimologicamente corretto la seguente proporzione verbale: 'Sarto : Ago = Fabbro : ?'",
+        options: ["Martello", "Incudine", "Ferro", "Fuoco", "Officina"],
+        correctAnswerIndex: 0,
+        explanation: "La logica della proporzione si basa sullo strumento principe della professione: l'ago è il piccolo strumento di lavoro primario utilizzato dal sarto per compiere l'azione, allo stesso modo il martello è lo strumento di battitura primario del fabbro."
+      },
+      {
+        category: "Competenza linguistica e ragionamento logico",
+        passage: "",
+        question: "Quale tra le seguenti frasi in lingua italiana contiene un grave errore di sintassi o grammatica?",
+        options: [
+          "Se l'avrei saputo per tempo, non sarei certamente venuto fin qui.",
+          "Non credo davvero che lui sia la persona più adatta per questo incarico.",
+          "Speravo vivamente che arrivaste prima dell'inizio dello spettacolo serale.",
+          "Sebbene fosse visibilmente stanco, decise di continuare a correre verso la meta.",
+          "Mi piacerebbe moltissimo riuscire a visitare il Giappone il prossimo anno."
+        ],
+        correctAnswerIndex: 0,
+        explanation: "La frase corretta dovrebbe essere 'Se l'avessi saputo, non sarei venuto'. Nel periodo ipotetico dell'irrealtà, la grammatica italiana esige l'uso del congiuntivo trapassato nella protasi (la frase subordinata che esprime la condizione), e non il condizionale."
+      },
+      {
+        category: "Competenza linguistica e ragionamento logico",
+        passage: "",
+        question: "Dal punto di vista della logica formale, negare la ferrea affermazione 'Tutti i gatti amano il pesce' equivale a sostenere che:",
+        options: [
+          "Esiste almeno un gatto che non ama mangiare il pesce.",
+          "Nessun gatto esistente sulla faccia della terra ama il pesce.",
+          "Assolutamente tutti i gatti odiano o detestano il pesce.",
+          "Soltanto i cani, ma non i gatti, provano amore per il pesce.",
+          "Alcuni gatti fortunati amano immensamente il pesce fresco."
+        ],
+        correctAnswerIndex: 0,
+        explanation: "Per confutare e negare una proposizione universale affermativa ('Tutti i soggetti X hanno la proprietà Y'), è sufficiente e logicamente necessario dimostrare l'esistenza di un singolo controesempio, ossia una particolare negativa ('Esiste almeno un X che non ha la proprietà Y')."
+      },
+      {
+        category: "Competenza linguistica e ragionamento logico",
+        passage: "",
+        question: "Quale tra le seguenti precise coppie di vocaboli è formata da palesi contrari (antonimi)?",
+        options: ["Effimero / Duraturo", "Lapalissiano / Evidente", "Ostracizzare / Esiliare", "Mite / Mansueto", "Subdolo / Falso"],
+        correctAnswerIndex: 0,
+        explanation: "Effimero significa sfuggente, di breve durata o transitorio nel tempo, mentre l'aggettivo duraturo indica per l'appunto qualcosa che si protrae o persiste a lungo. Al contrario, tutte le altre opzioni presentate elencano chiare coppie di sinonimi."
+      },
+      {
+        category: "Competenza linguistica e ragionamento logico",
+        passage: "",
+        question: "Cinque amici (chiamati A, B, C, D, E) si siedono in fila in una sala cinematografica per guardare un film. A si siede all'estrema sinistra della fila. C si siede all'estrema destra. E si siede esattamente al posto centrale. Sapendo inoltre che D si rifiuta categoricamente di sedersi vicino a C, chi occupa il posto immediatamente alla sinistra di C?",
+        options: ["B", "D", "E", "A", "Non è matematicamente determinabile"],
+        correctAnswerIndex: 0,
+        explanation: "Numerando i posti da sinistra a destra (1-5): A è al posto 1, E al posto 3, C al posto 5. Rimangono liberi solo i posti 2 e 4. Poiché D rifiuta di sedersi vicino a C (che sta al 5), D non può prendere il posto 4; di conseguenza D si siede al posto 2. Il posto 4, ovvero quello subito a sinistra di C, resta obbligatoriamente a B."
+      },
+      {
+        category: "Competenza linguistica e ragionamento logico",
+        passage: "Il bullismo non è certamente un fenomeno nuovo nelle società umane, ma con l'avvento dei social network ha assunto dimensioni e caratteristiche comportamentali del tutto inedite, configurandosi come cyberbullismo. La persistenza e l'incancellabilità del messaggio in rete, il subdolo anonimato dietro cui molto spesso si cela vigliaccamente il persecutore e la potenziale diffusione esplosiva e virale dell'offesa rendono questa moderna forma di aggressione particolarmente insidiosa e devastante per le giovani vittime, quasi sempre adolescenti fragili che si trovano in una fase cruciale e delicata della costruzione della propria complessa identità sociale.",
+        question: "Attenendosi scrupolosamente a quanto riportato nel brano, quale tra queste NON rappresenta una caratteristica distintiva del cyberbullismo rispetto alle forme di bullismo tradizionale?",
+        options: [
+          "L'uso abituale della violenza fisica diretta nei confronti della vittima designata.",
+          "L'anonimato che spesso protegge l'identità del persecutore in rete.",
+          "La potenziale diffusione e risonanza virale dell'offesa inviata.",
+          "La permanenza continua del messaggio ostile e offensivo in rete.",
+          "Il forte impatto psicologico e devastante su adolescenti in fase di crescita."
+        ],
+        correctAnswerIndex: 0,
+        explanation: "Nel brano vengono menzionati specificamente come fattori distintivi l'anonimato digitale, la diffusione virale, la permanenza dei post e l'impatto sugli adolescenti. Non viene mai nominata o suggerita la violenza fisica diretta, che rappresenta storicamente una dinamica del bullismo classico faccia-a-faccia e non del cyberbullismo (mediato da schermi e connessioni)."
+      },
+      {
+        category: "Competenza linguistica e ragionamento logico",
+        passage: "",
+        question: "Su un orologio analogico da parete a lancette, l'ora esatta segna le 15:30 in punto. Che angolo geometrico formano tra loro, sul quadrante, la lancetta corta delle ore e la lancetta lunga dei minuti?",
+        options: ["75 gradi", "90 gradi", "60 gradi", "45 gradi", "105 gradi"],
+        correctAnswerIndex: 0,
+        explanation: "Alle ore 15:30 la lancetta dei minuti è fissa e puntata sul 6 (a 180° rispetto alle ore 12). Nello stesso istante, la lancetta delle ore ha superato il 3 di esatta mezz'ora (metà strada verso il 4). Essendo lo spicchio di un'ora largo 30° (360°/12), metà spicchio equivale a 15°. Quindi la lancetta corta si trova a 90° + 15° = 105°. La differenza per calcolare l'angolo tra le due è 180° - 105° = 75°."
+      },
+      {
+        category: "Cultura letteraria, storico-sociale e geografica",
+        passage: "",
+        question: "Quale celebre e voluminosa opera, scritta da Giovanni Boccaccio, è considerata senza dubbi uno dei massimi capolavori della letteratura europea in prosa del XIV secolo e narra la storia di un gruppo di giovani che per sfuggire alla morte per peste nera si rifugia assieme in una villa isolata in campagna?",
+        options: ["Il Decameron", "La Divina Commedia", "Il Canzoniere", "L'Orlando Furioso", "La Gerusalemme Liberata"],
+        correctAnswerIndex: 0,
+        explanation: "Il Decameron, redatto da Giovanni Boccaccio intorno alla metà del 1300, è una famosissima raccolta letteraria in prosa che contiene 100 novelle, raccontate a turno da dieci giovani nobili fiorentini costretti all'isolamento preventivo durante la drammatica epidemia di peste del 1348."
+      },
+      {
+        category: "Cultura letteraria, storico-sociale e geografica",
+        passage: "",
+        question: "Quale macroscopico evento storico di valenza europea, la cui datazione è convenzionalmente fissata dagli storiografi al 476 d.C., segna l'esito finale dell'Età Antica e l'inizio vero e proprio dell'epoca nota come Medioevo?",
+        options: [
+          "La caduta formale dell'Impero Romano d'Occidente.",
+          "Il crollo prolungato dell'Impero Romano d'Oriente.",
+          "Il primo viaggio della scoperta dell'America.",
+          "Il grande Scisma della Chiesa d'Oriente.",
+          "L'assassinio brutale di Giulio Cesare alle Idi di Marzo."
+        ],
+        correctAnswerIndex: 0,
+        explanation: "La destituzione non cruenta dell'ultimo imperatore romano insediato a Ravenna (Romolo Augusto) ad opera del re e comandante barbaro degli Eruli, Odoacre, avvenuta nell'anno 476 d.C., costituisce la cesura storica ufficiale scelta per identificare la caduta dell'Impero Romano d'Occidente, aprendo così le porte al Medioevo."
+      },
+      {
+        category: "Cultura letteraria, storico-sociale e geografica",
+        passage: "",
+        question: "Tra quelli proposti, qual è il nome dello Stretto marittimo che separa in modo naturale e geografico la propaggine estrema dell'Asia dal continente dell'America del Nord?",
+        options: ["Stretto di Bering", "Stretto di Gibilterra", "Stretto di Magellano", "Canale di Panama", "Stretto di Malacca"],
+        correctAnswerIndex: 0,
+        explanation: "Lo Stretto di Bering è il fondamentale e sottile braccio di mare freddo situato nell'Oceano Pacifico settentrionale che funge da confine naturale marittimo dividendo nettamente il territorio della Russia siberiana (continente asiatico) dallo stato americano dell'Alaska (continente nordamericano)."
+      },
+      {
+        category: "Cultura letteraria, storico-sociale e geografica",
+        passage: "",
+        question: "In base all'articolazione democratica e ai pesi dei poteri presenti nella Costituzione della Repubblica Italiana, a quale di questi supremi organi statali spetta primariamente l'esercizio del potere legislativo?",
+        options: [
+          "Al Parlamento della Repubblica",
+          "Al Consiglio dei Ministri (Governo)",
+          "Direttamente al Presidente della Repubblica",
+          "Alla Magistratura Superiore Ordinaria",
+          "Ai giudici della Corte Costituzionale"
+        ],
+        correctAnswerIndex: 0,
+        explanation: "Nell'impianto costituzionale e nell'ordinamento giuridico vigente in Italia, il potere legislativo in senso stretto (che consiste nel fondamentale potere rappresentativo di fare, discutere e approvare in via definitiva le leggi) spetta in solido alle due Camere del Parlamento (Camera dei Deputati e Senato)."
+      },
+      {
+        category: "Cultura letteraria, storico-sociale e geografica",
+        passage: "",
+        question: "Quale tra i seguenti sconvolgenti conflitti militari internazionali su vasta scala fu originariamente innescato, come inequivocabile 'casus belli', dall'assassinio a mano armata dell'arciduca Francesco Ferdinando a Sarajevo, avvenuto precisamente il 28 giugno 1914?",
+        options: [
+          "La Prima Guerra Mondiale",
+          "La spaventosa Seconda Guerra Mondiale",
+          "Il lunghissimo conflitto della Guerra Fredda",
+          "La tragica Guerra di Secessione Americana",
+          "L'emblematica Guerra Franco-Prussiana"
+        ],
+        correctAnswerIndex: 0,
+        explanation: "Il clamoroso omicidio politico dell'arciduca asburgico Francesco Ferdinando, erede designato al trono per l'Impero Austro-Ungarico, da parte di Gavrilo Princip rappresentò la miccia che fece scattare nel giro di un solo mese il complesso sistema delle alleanze diplomatiche incrociate, culminando nello scoppio sanguinoso della Prima Guerra Mondiale (Grande Guerra)."
+      },
+      {
+        category: "Cultura letteraria, storico-sociale e geografica",
+        passage: "",
+        question: "Chi è il creatore e l'autore inimitabile del romanzo del Novecento intitolato 'Uno, nessuno e centomila' (considerato dall'autore stesso come il suo capolavoro finale)?",
+        options: ["Luigi Pirandello", "Italo Svevo", "Giovanni Verga", "Gabriele D'Annunzio", "Italo Calvino"],
+        correctAnswerIndex: 0,
+        explanation: "L'introspezione narrativa e la destrutturazione dell'io presenti nel romanzo 'Uno, nessuno e centomila', la cui lunga stesura terminò con la pubblicazione nell'anno 1926, lo identificano come l'opera testamentaria ed esistenzialista del siciliano Premio Nobel Luigi Pirandello."
+      },
+      {
+        category: "Cultura matematico-scientifica",
+        passage: "",
+        question: "Se si lancia in aria per terra un comune dado a 6 facce non truccato (equo), qual è la probabilità numerica e statistica complessiva che la faccia superiore mostri un numero primo?",
+        options: ["1/2", "1/3", "2/3", "1/6", "5/6"],
+        correctAnswerIndex: 0,
+        explanation: "Facendo rotolare il dado, i sei risultati ugualmente possibili ammissibili sono {1, 2, 3, 4, 5, 6}. Di questi, i veri numeri primi risultano essere unicamente {2, 3, 5} (attenzione, il numero 1 per convenzione matematica universale non è classificato primo). Avendo 3 risultati favorevoli contro 6 casi probabili massimi, la formula P dà esito 3/6, semplificabile in probabilità di 1/2."
+      },
+      {
+        category: "Cultura matematico-scientifica",
+        passage: "",
+        question: "Come si chiama scientificamente e specificamente il vitale processo chimico autotrofo attraverso il quale le piante superiori producono in autonomia la loro materia organica (glucosio), partendo unicamente da anidride carbonica e acqua prelevate, avvalendosi dell'energia emessa dall'irraggiamento solare?",
+        options: ["Fotosintesi clorofilliana", "Respirazione metabolica cellulare", "Glicolisi anaerobica e aerobia", "Fermentazione omo ed eterolattica", "Fase di trascrizione del DNA"],
+        correctAnswerIndex: 0,
+        explanation: "A livello biochimico, la complessa fotosintesi clorofilliana (svolta all'interno dei cloroplasti) consiste in quel magico processo endoergonico che dota i vegetali verdi della rara capacità di impiegare reazioni di ossidoriduzione guidate dalla luce, in modo da convertire efficacemente materie prime povere di energia in zuccheri complessi per l'immagazzinamento."
+      },
+      {
+        category: "Cultura matematico-scientifica",
+        passage: "",
+        question: "Un immenso serbatoio idrico industriale ha la capacità dichiarata a volume pieno di ben 500 litri ed attualmente, secondo il sensore, è riempito con un livello corrispondente al 40% del suo massimo. Quanti litri liquidi d'acqua bisogna materialmente riversare per arrivare all'orlo e colmarlo interamente (100%)?",
+        options: ["300 litri", "200 litri", "250 litri", "400 litri", "150 litri"],
+        correctAnswerIndex: 0,
+        explanation: "Essendo il serbatoio riempito di base per un ammontare idrico del 40%, il restante vuoto volumetrico ammonta inesorabilmente al complemento percentuale, ovvero al 60% (da 100-40). Basterà impostare l'equazione per estrarre tale porzione del totale: (60 diviso 100) per i litri totali, cioè 0.60 * 500 = 300 litri."
+      },
+      {
+        category: "Cultura matematico-scientifica",
+        passage: "",
+        question: "Il parametro di pH in ambito chimico è per definizione una scala strumentale di misura del grado di acidità o di reattività basica che assume una soluzione disciolta. Di conseguenza un riscontro scientifico oggettivo che mostri un pH pari a 2 su un campione, indicherà irrefutabilmente una soluzione in stato:",
+        options: ["Fortemente acida", "Totalmente neutra", "Soltanto debolmente basica", "A livello fortemente basico", "Appena debolmente acida"],
+        correctAnswerIndex: 0,
+        explanation: "Nella termodinamica convenzionale, la scala logaritmica limitata e consueta del pH estende il suo range di verifica da 0 a 14. Un valore posizionato nel centro mediano (7) esprime la condizione di precisa neutralità pura, come nell'acqua demineralizzata; tutti i valori ad esso interiori designano spiccata acidità con potenziale ionico corrosivo. Più il numero crolla rasente allo zero termico, più la potenza acida si dimostra severa e forte; per cui un pH 2 corrisponde ad acidità forte."
+      },
+      {
+        category: "Cultura matematico-scientifica",
+        passage: "",
+        question: "Riferendoci alle regole dei poligoni: misurando il lato inclinato o ipotenusa di un determinato triangolo rettangolo geometrico otteniamo la misurazione fissa di 10 cm, e con lo stesso strumento individuiamo la misura di uno dei due cateti posizionandola pari a 6 cm di lunghezza piana. Quale sarà di rigore, senza alcun dubbio o tolleranza dimensionale, la precisa ed unica misura deducibile calcolata per il cateto ortogonale residuo (l'altro cateto)?",
+        options: ["8 cm", "4 cm", "12 cm", "7 cm", "9 cm"],
+        correctAnswerIndex: 0,
+        explanation: "Il postulato pitagorico impone perentoriamente che il totale quadrato originato geometricamente sull'ipotenusa in questione debba risultare numericamente identico alla semplice somma eseguita tra le relative misurazioni quadrate di entrambi i due singoli cateti formanti l'angolo. Nel ribaltare l'impostazione per trovare un cateto, si attua una differenza: Cateto^2 uguale Ipotenusa^2 diminuita dal secondo Cateto^2. Questo equivale algebricamente a 10^2 - 6^2, e svolgendo l'espressione in potenze: 100 meno 36 produce il residuo del fattore 64. Avendone da estrarre la radice formale di area per ritornare in lunghezza al centimetro base, avremo il numero intero 8."
+      }
+    ];
+
+    // --- GENERAZIONE ID UNIVOCO (HASH) BASATO SULLE DOMANDE ---
+    // Questo garantisce che file HTML identici usino la stessa memoria, 
+    // ma file con test (e domande) diverse usino celle di memoria totalmente separate.
+    const generateTestId = () => {
+      const testContent = quizQuestions.map(q => q.question).join('|');
+      let hash = 0;
+      for (let i = 0; i < testContent.length; i++) {
+        const char = testContent.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash = hash & hash; // Converte a intero a 32 bit
+      }
+      return "sfp_test_" + Math.abs(hash);
+    };
+    
+    const TEST_ID = generateTestId();
+
+    // --- COMPONENTE REACT PRINCIPALE ---
+    function App() {
+      const [started, setStarted] = useState(false);
+      const [currentIndex, setCurrentIndex] = useState(0);
+      
+      // userAnswers mantiene lo stato di ogni domanda: null se non risposta, oppure { selectedIndex, isCorrect, points }
+      const [userAnswers, setUserAnswers] = useState(Array(quizQuestions.length).fill(null));
+      
+      const [testFinished, setTestFinished] = useState(false);
+      const [showGridModal, setShowGridModal] = useState(false);
+      const [showSubmitModal, setShowSubmitModal] = useState(false);
+      const [hasSavedSession, setHasSavedSession] = useState(false);
+
+      // Caricamento iniziale per verificare se c'è una sessione salvata in memoria (specifica per questo TEST_ID)
+      useEffect(() => {
+        const savedAnswers = localStorage.getItem(`${TEST_ID}_answers`);
+        if (savedAnswers) {
+          setHasSavedSession(true);
+        }
+      }, []);
+
+      // Salvataggio automatico progressi ad ogni modifica (se il test è iniziato)
+      useEffect(() => {
+        if (started && !testFinished) {
+          localStorage.setItem(`${TEST_ID}_answers`, JSON.stringify(userAnswers));
+          localStorage.setItem(`${TEST_ID}_current_index`, currentIndex.toString());
+        }
+      }, [userAnswers, currentIndex, started, testFinished]);
+
+      useEffect(() => {
+        if (started) {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      }, [currentIndex, started]);
+
+      const startTest = () => {
+        localStorage.removeItem(`${TEST_ID}_answers`);
+        localStorage.removeItem(`${TEST_ID}_current_index`);
+        setHasSavedSession(false);
+        setStarted(true);
+        setCurrentIndex(0);
+        setUserAnswers(Array(quizQuestions.length).fill(null));
+        setTestFinished(false);
+        setShowGridModal(false);
+        setShowSubmitModal(false);
+      };
+
+      const resumeTest = () => {
+        try {
+          const savedAnswers = JSON.parse(localStorage.getItem(`${TEST_ID}_answers`));
+          const savedIndex = parseInt(localStorage.getItem(`${TEST_ID}_current_index`) || '0', 10);
+          
+          if (savedAnswers && Array.isArray(savedAnswers)) {
+            setUserAnswers(savedAnswers);
+            setCurrentIndex(savedIndex);
+            setStarted(true);
+            setTestFinished(false);
+            setShowGridModal(false);
+            setShowSubmitModal(false);
+          } else {
+            startTest(); // fallback se i dati sono corrotti
+          }
+        } catch (e) {
+          startTest();
+        }
+      };
+
+      const currentAnswer = userAnswers[currentIndex];
+      const isAnswered = currentAnswer !== null;
+
+      const handleSelectOption = (index) => {
+        if (isAnswered) return; // Se ha già risposto, non fa nulla (feedback bloccato)
+        
+        const isCorrect = index === quizQuestions[currentIndex].correctAnswerIndex;
+        let pointsToAdd = isCorrect ? 1 : -0.25;
+        
+        const newAnswers = [...userAnswers];
+        newAnswers[currentIndex] = {
+          selectedIndex: index,
+          isCorrect,
+          points: pointsToAdd
+        };
+        setUserAnswers(newAnswers);
+      };
+
+      const handleNext = () => {
+        if (currentIndex < quizQuestions.length - 1) {
+          setCurrentIndex(c => c + 1);
+        }
+      };
+
+      const handlePrev = () => {
+        if (currentIndex > 0) {
+          setCurrentIndex(c => c - 1);
+        }
+      };
+
+      const submitTest = () => {
+        localStorage.removeItem(`${TEST_ID}_answers`);
+        localStorage.removeItem(`${TEST_ID}_current_index`);
+        setHasSavedSession(false);
+        setShowSubmitModal(false);
+        setTestFinished(true);
+      };
+
+      const currentScore = userAnswers.reduce((sum, ans) => sum + (ans ? ans.points : 0), 0);
+      const answeredCount = userAnswers.filter(ans => ans !== null).length;
+
+      if (!started) {
+        return (
+          <div className="min-h-screen flex items-center justify-center p-6">
+            <div className="bg-white max-w-2xl w-full rounded-2xl shadow-xl p-10 text-center border-t-8 border-indigo-600">
+              <BookOpen className="w-20 h-20 text-indigo-600 mx-auto mb-6" />
+              <h1 className="text-4xl font-extrabold text-slate-800 mb-4 tracking-tight">Simulazione Ufficiale Test SFP</h1>
+              <p className="text-xl text-slate-600 mb-8 font-medium">Scienze della Formazione Primaria 2026/2027</p>
+              
+              <div className="bg-slate-100 rounded-xl p-6 mb-8 text-left space-y-4">
+                <h3 className="font-bold text-slate-800 text-lg flex items-center gap-2">
+                  <ListOrdered className="w-5 h-5 text-indigo-600"/> Struttura del Test ({quizQuestions.length} Quesiti)
+                </h3>
+                <ul className="list-disc pl-6 text-slate-700 space-y-2">
+                  <li><strong>Competenza linguistica e ragionamento logico:</strong> {quizQuestions.filter(q => q.category === "Competenza linguistica e ragionamento logico").length} quesiti</li>
+                  <li><strong>Cultura letteraria, storico-sociale e geografica:</strong> {quizQuestions.filter(q => q.category === "Cultura letteraria, storico-sociale e geografica").length} quesiti</li>
+                  <li><strong>Cultura matematico-scientifica:</strong> {quizQuestions.filter(q => q.category === "Cultura matematico-scientifica").length} quesiti</li>
+                </ul>
+                <div className="border-t border-slate-300 pt-4 mt-4">
+                  <h3 className="font-bold text-slate-800 flex items-center gap-2 mb-2">
+                    <BrainCircuit className="w-5 h-5 text-indigo-600"/> Criteri di Valutazione Ministeriale
+                  </h3>
+                  <div className="grid grid-cols-3 gap-4 text-center">
+                    <div className="bg-green-100 text-green-800 p-3 rounded-lg font-semibold">+1 Punto <br/><span className="text-sm font-normal">Risposta esatta</span></div>
+                    <div className="bg-red-100 text-red-800 p-3 rounded-lg font-semibold">-0.25 Punti <br/><span className="text-sm font-normal">Risposta errata</span></div>
+                    <div className="bg-slate-200 text-slate-800 p-3 rounded-lg font-semibold">0 Punti <br/><span className="text-sm font-normal">Non data</span></div>
+                  </div>
+                </div>
+                <div className="bg-yellow-50 text-yellow-800 p-4 rounded-lg text-sm border border-yellow-200 flex items-start gap-3 mt-4">
+                  <AlertTriangle className="w-6 h-6 shrink-0"/>
+                  <p><strong>Modalità Attiva con Navigazione Libera:</strong> Riceverai feedback immediato alle tue risposte, e potrai saltare e tornare indietro sulle domande quando preferisci grazie alla griglia di navigazione.</p>
+                </div>
+              </div>
+              
+              {hasSavedSession ? (
+                <div className="bg-indigo-50 border-2 border-indigo-200 p-6 rounded-xl text-center shadow-inner">
+                  <h3 className="text-xl font-bold text-indigo-900 mb-2 flex items-center justify-center gap-2">
+                    <History className="w-6 h-6"/> Sessione in Sospeso
+                  </h3>
+                  <p className="text-indigo-700 mb-6 font-medium">Hai un test iniziato in precedenza. Vuoi riprendere da dove avevi lasciato?</p>
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    <button onClick={resumeTest} className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-6 rounded-xl transition-all shadow-md flex items-center justify-center gap-2">
+                      <Play className="w-5 h-5 fill-current"/> Riprendi Test
+                    </button>
+                    <button onClick={startTest} className="flex-1 bg-white border-2 border-slate-300 hover:border-slate-400 text-slate-700 font-bold py-4 px-6 rounded-xl transition-all flex items-center justify-center gap-2">
+                      <RotateCcw className="w-5 h-5"/> Inizia da capo
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <button onClick={startTest} className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-8 rounded-xl text-xl transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-3 transform hover:-translate-y-1">
+                  <Play className="w-6 h-6 fill-current"/> Inizia la Simulazione
+                </button>
+              )}
+            </div>
+          </div>
+        );
+      }
+
+      if (testFinished) {
+        const correctAnswers = userAnswers.filter(a => a && a.isCorrect).length;
+        const wrongAnswers = userAnswers.filter(a => a && !a.isCorrect).length;
+        const skippedAnswers = quizQuestions.length - answeredCount;
+
+        return (
+          <div className="min-h-screen p-6 flex items-center justify-center">
+            <div className="bg-white max-w-3xl w-full rounded-2xl shadow-xl p-10 text-center border-t-8 border-indigo-600">
+              <Award className="w-24 h-24 text-indigo-600 mx-auto mb-6" />
+              <h2 className="text-4xl font-extrabold text-slate-800 mb-2">Risultato Finale</h2>
+              <p className="text-slate-600 mb-8">Hai completato la simulazione del test per Scienze della Formazione Primaria.</p>
+              
+              <div className="bg-indigo-50 rounded-2xl p-8 mb-8">
+                <div className="text-7xl font-black text-indigo-700 mb-2">{currentScore.toFixed(2)}<span className="text-3xl text-indigo-400">/{quizQuestions.length}</span></div>
+                <p className="text-indigo-800 font-medium">Punteggio Ministeriale Calcolato</p>
+              </div>
+
+              <div className="grid grid-cols-3 gap-4 mb-10">
+                <div className="bg-green-50 p-4 rounded-xl border border-green-200">
+                  <div className="text-3xl font-bold text-green-700">{correctAnswers}</div>
+                  <div className="text-sm text-green-800 font-medium">Risposte Corrette</div>
+                </div>
+                <div className="bg-red-50 p-4 rounded-xl border border-red-200">
+                  <div className="text-3xl font-bold text-red-700">{wrongAnswers}</div>
+                  <div className="text-sm text-red-800 font-medium">Risposte Errate</div>
+                </div>
+                <div className="bg-slate-100 p-4 rounded-xl border border-slate-200">
+                  <div className="text-3xl font-bold text-slate-700">{skippedAnswers}</div>
+                  <div className="text-sm text-slate-800 font-medium">Non Risposte</div>
+                </div>
+              </div>
+
+              <button onClick={startTest} className="bg-slate-800 hover:bg-slate-900 text-white font-bold py-3 px-8 rounded-xl transition-all shadow-md flex items-center justify-center gap-2 mx-auto">
+                <RotateCcw className="w-5 h-5"/> Ripeti il Test
+              </button>
+            </div>
+          </div>
+        );
+      }
+
+      const currentQuestion = quizQuestions[currentIndex];
+
+      return (
+        <div className="min-h-screen flex flex-col font-sans pb-24">
+          {/* Header */}
+          <header className="bg-white shadow-sm border-b sticky top-0 z-20">
+            <div className="max-w-7xl mx-auto px-4 py-3 flex flex-wrap lg:flex-nowrap items-center justify-between gap-4">
+              <div className="flex items-center gap-2">
+                <div className="bg-indigo-100 p-2 rounded-lg hidden sm:block"><BookOpen className="w-5 h-5 text-indigo-700"/></div>
+                <span className="font-bold text-slate-800 tracking-tight whitespace-nowrap">Esame SFP</span>
+              </div>
+              
+              <div className="flex-1 w-full lg:max-w-md mx-2 order-3 lg:order-none">
+                <div className="flex justify-between text-xs font-bold text-slate-500 mb-1">
+                  <span>Domanda {currentIndex + 1} di {quizQuestions.length}</span>
+                  <span>{Math.round((answeredCount / quizQuestions.length) * 100)}% Completato</span>
+                </div>
+                <div className="w-full bg-slate-200 rounded-full h-2.5">
+                  <div className="bg-indigo-600 h-2.5 rounded-full transition-all duration-300" style={{ width: `${(answeredCount / quizQuestions.length) * 100}%` }}></div>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 lg:gap-4">
+                <div className="text-sm font-semibold bg-slate-100 text-slate-700 px-3 py-1.5 rounded-lg border border-slate-200 hidden sm:block">
+                  Punteggio: <span className="text-indigo-700">{currentScore.toFixed(2)}</span>
+                </div>
+                
+                <button onClick={() => setShowGridModal(true)} className="flex items-center gap-2 px-3 py-1.5 bg-white border-2 border-slate-200 hover:border-indigo-400 rounded-lg font-bold text-slate-700 transition-colors">
+                  <LayoutGrid className="w-4 h-4 text-indigo-600"/> <span className="hidden sm:inline">Griglia</span>
+                </button>
+
+                <button onClick={() => setShowSubmitModal(true)} className="flex items-center gap-2 px-4 py-1.5 bg-slate-800 hover:bg-slate-900 text-white rounded-lg font-bold transition-colors">
+                  <Send className="w-4 h-4"/> <span className="hidden sm:inline">Consegna</span>
+                </button>
+              </div>
+            </div>
+          </header>
+
+          {/* Main Content */}
+          <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 flex flex-col">
+            <div className="mb-4 flex justify-between items-center">
+              <span className="inline-block bg-indigo-100 text-indigo-800 text-xs px-3 py-1 rounded-full font-bold uppercase tracking-wider">
+                {currentQuestion.category}
+              </span>
+              {!isAnswered && <span className="text-xs font-bold text-slate-400">Non risposta</span>}
+            </div>
+
+            <div className={currentQuestion.passage ? "flex flex-col lg:flex-row gap-8" : "w-full max-w-4xl mx-auto flex flex-col gap-6"}>
+              
+              {/* Brano lungo se presente */}
+              {currentQuestion.passage && (
+                <div className="w-full lg:w-1/2 flex flex-col">
+                  <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex-1 lg:max-h-[calc(100vh-200px)] overflow-y-auto custom-scrollbar">
+                    <h3 className="font-bold text-slate-800 mb-4 flex items-center gap-2 border-b pb-2">
+                      <BookOpen className="w-5 h-5 text-indigo-600"/> Testo di Riferimento
+                    </h3>
+                    <div className="text-slate-700 leading-relaxed space-y-4 text-sm sm:text-base text-justify whitespace-pre-wrap">
+                      {currentQuestion.passage}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Domanda e Opzioni */}
+              <div className={currentQuestion.passage ? "w-full lg:w-1/2 flex flex-col gap-4" : "w-full flex flex-col gap-4"}>
+                <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                  <h2 className="text-xl sm:text-2xl font-bold text-slate-800 leading-snug mb-2">
+                    {currentQuestion.question}
+                  </h2>
+                </div>
+
+                <div className="flex flex-col gap-3">
+                  {currentQuestion.options.map((option, index) => {
+                    const isSelected = isAnswered && currentAnswer.selectedIndex === index;
+                    const isCorrectAnswer = index === currentQuestion.correctAnswerIndex;
+                    
+                    let buttonClass = "w-full text-left p-4 rounded-xl border-2 transition-all flex items-start gap-3 relative overflow-hidden ";
+                    
+                    if (!isAnswered) {
+                      buttonClass += "bg-white border-slate-200 hover:border-indigo-400 hover:bg-indigo-50 cursor-pointer text-slate-700";
+                    } else {
+                      buttonClass += "cursor-default ";
+                      if (isCorrectAnswer) {
+                        buttonClass += "bg-green-50 border-green-500 text-green-900 shadow-sm";
+                      } else if (isSelected && !isCorrectAnswer) {
+                        buttonClass += "bg-red-50 border-red-500 text-red-900 shadow-sm";
+                      } else {
+                        buttonClass += "bg-white border-slate-200 text-slate-400 opacity-60";
+                      }
+                    }
+
+                    return (
+                      <button key={index} disabled={isAnswered} onClick={() => handleSelectOption(index)} className={buttonClass}>
+                        <div className={`mt-0.5 shrink-0 flex items-center justify-center w-6 h-6 rounded-full border-2 text-xs font-bold ${isAnswered && isCorrectAnswer ? 'border-green-600 bg-green-600 text-white' : isAnswered && isSelected && !isCorrectAnswer ? 'border-red-600 bg-red-600 text-white' : 'border-slate-300 text-slate-500'}`}>
+                          {String.fromCharCode(65 + index)}
+                        </div>
+                        <span className="font-medium text-[15px] sm:text-base leading-snug">{option}</span>
+                        
+                        {isAnswered && isCorrectAnswer && (
+                          <CheckCircle2 className="absolute right-4 top-1/2 -translate-y-1/2 w-6 h-6 text-green-600" />
+                        )}
+                        {isAnswered && isSelected && !isCorrectAnswer && (
+                          <XCircle className="absolute right-4 top-1/2 -translate-y-1/2 w-6 h-6 text-red-600" />
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Feedback Immediato se ha risposto */}
+                {isAnswered && (
+                  <div className="animate-in fade-in duration-300 mt-2">
+                    <div className={`p-5 rounded-xl border-l-4 shadow-sm ${currentAnswer.isCorrect ? 'bg-green-50 border-green-500' : 'bg-red-50 border-red-500'}`}>
+                      <h4 className="font-bold flex items-center gap-2 mb-2">
+                        {currentAnswer.isCorrect ? (
+                          <><CheckCircle2 className="w-5 h-5 text-green-600"/> Risposta Esatta (+1 pt)</>
+                        ) : (
+                          <><XCircle className="w-5 h-5 text-red-600"/> Risposta Errata (-0.25 pt)</>
+                        )}
+                      </h4>
+                      <p className="text-sm text-slate-800 leading-relaxed font-medium">
+                        {currentQuestion.explanation}
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </main>
+
+          {/* Bottom Navigation Bar */}
+          <div className="fixed bottom-0 left-0 right-0 bg-white border-t p-4 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] z-10">
+            <div className="max-w-4xl mx-auto flex items-center justify-between gap-4">
+              <button 
+                onClick={handlePrev} 
+                disabled={currentIndex === 0}
+                className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-3 rounded-xl border-2 border-slate-200 text-slate-600 font-bold hover:bg-slate-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <ChevronLeft className="w-5 h-5"/> <span className="hidden sm:inline">Precedente</span>
+              </button>
+              
+              {currentIndex < quizQuestions.length - 1 ? (
+                <button 
+                  onClick={handleNext}
+                  className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-8 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl transition-colors shadow-md"
+                >
+                  <span className="hidden sm:inline">{isAnswered ? "Prossima Domanda" : "Salta e vai avanti"}</span>
+                  <span className="sm:hidden">{isAnswered ? "Prossima" : "Salta"}</span>
+                  <ChevronRight className="w-5 h-5"/>
+                </button>
+              ) : (
+                <button 
+                  onClick={() => setShowSubmitModal(true)}
+                  className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-8 py-3 bg-slate-800 hover:bg-slate-900 text-white font-bold rounded-xl transition-colors shadow-md"
+                >
+                  Consegna Test <Send className="w-5 h-5"/>
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Modal Mappa Domande (Griglia) */}
+          {showGridModal && (
+            <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+              <div className="bg-white w-full max-w-3xl max-h-[90vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-in zoom-in-95 duration-200">
+                <div className="flex justify-between items-center p-5 border-b bg-slate-50">
+                  <h3 className="text-xl font-bold flex items-center gap-2 text-slate-800">
+                    <LayoutGrid className="w-6 h-6 text-indigo-600"/> Mappa delle Domande
+                  </h3>
+                  <button onClick={() => setShowGridModal(false)} className="text-slate-400 hover:text-slate-700 p-1">
+                    <X className="w-6 h-6" />
+                  </button>
+                </div>
+                
+                <div className="p-6 overflow-y-auto custom-scrollbar flex-1">
+                  <div className="grid grid-cols-5 sm:grid-cols-10 gap-2 sm:gap-3">
+                    {quizQuestions.map((_, i) => {
+                      const ans = userAnswers[i];
+                      let btnClass = "w-full aspect-square rounded-lg font-bold text-sm flex items-center justify-center transition-all ";
+                      
+                      if (ans) {
+                        btnClass += ans.isCorrect ? "bg-green-500 text-white border border-green-600 shadow-sm " : "bg-red-500 text-white border border-red-600 shadow-sm ";
+                      } else {
+                        btnClass += "bg-white border-2 border-slate-200 text-slate-500 hover:border-indigo-400 hover:text-indigo-600 ";
+                      }
+
+                      if (i === currentIndex) {
+                        btnClass += "ring-4 ring-indigo-300 ring-offset-1 ";
+                      }
+
+                      return (
+                        <button 
+                          key={i}
+                          onClick={() => { setCurrentIndex(i); setShowGridModal(false); }}
+                          className={btnClass}
+                        >
+                          {i + 1}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <div className="p-4 border-t bg-slate-50 flex justify-center gap-6 text-sm font-semibold text-slate-600">
+                  <div className="flex items-center gap-2"><div className="w-3 h-3 rounded-full bg-green-500"></div> Esatta</div>
+                  <div className="flex items-center gap-2"><div className="w-3 h-3 rounded-full bg-red-500"></div> Errata</div>
+                  <div className="flex items-center gap-2"><div className="w-3 h-3 rounded-full bg-white border-2 border-slate-300"></div> Da fare</div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Modal Conferma Consegna */}
+          {showSubmitModal && (
+            <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+              <div className="bg-white w-full max-w-md rounded-2xl shadow-2xl p-6 text-center animate-in zoom-in-95 duration-200">
+                <div className="w-16 h-16 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Send className="w-8 h-8"/>
+                </div>
+                <h3 className="text-2xl font-bold text-slate-800 mb-2">Vuoi consegnare il test?</h3>
+                <p className="text-slate-600 mb-6">
+                  Hai risposto a <strong className="text-indigo-600">{answeredCount}</strong> domande su <strong>{quizQuestions.length}</strong>. 
+                  {answeredCount < quizQuestions.length && " Le domande non risposte varranno 0 punti."}
+                </p>
+                <div className="flex gap-3">
+                  <button onClick={() => setShowSubmitModal(false)} className="flex-1 py-3 px-4 rounded-xl border-2 border-slate-200 text-slate-600 font-bold hover:bg-slate-50 transition-colors">
+                    Continua il test
+                  </button>
+                  <button onClick={submitTest} className="flex-1 py-3 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold transition-colors shadow-md">
+                    Consegna ora
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>

@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simulazione Ufficiale Test SFP</title>
+  
+  <!-- Tailwind CSS per lo styling -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- React & ReactDOM (UMD Build) -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  
+  <!-- Babel (Compila il JSX nel browser in tempo reale) -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <style>
+    .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 10px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased overflow-x-hidden">
+  
+  <div id="root"></div>
+
+  <!-- Il nostro codice React convertito per funzionare con Babel Standalone -->
+  <script type="text/babel">
+    const { useState, useEffect, useRef } = React;
+
+    // --- ICONE SVG ---
+    const IconWrapper = ({ children, className }) => (
+      <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        {children}
+      </svg>
+    );
+    const BookOpen = ({className}) => <IconWrapper className={className}><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></IconWrapper>;
+    const CheckCircle2 = ({className}) => <IconWrapper className={className}><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></IconWrapper>;
+    const XCircle = ({className}) => <IconWrapper className={className}><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></IconWrapper>;
+    const RotateCcw = ({className}) => <IconWrapper className={className}><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></IconWrapper>;
+    const Award = ({className}) => <IconWrapper className={className}><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></IconWrapper>;
+    const Play = ({className}) => <IconWrapper className={className}><polygon points="5 3 19 12 5 21 5 3"/></IconWrapper>;
+    const ListOrdered = ({className}) => <IconWrapper className={className}><line x1="10" x2="21" y1="6" y2="6"/><line x1="10" x2="21" y1="12" y2="12"/><line x1="10" x2="21" y1="18" y2="18"/><path d="M4 6h1v4"/><path d="M4 10h2"/><path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"/></IconWrapper>;
+    const BrainCircuit = ({className}) => <IconWrapper className={className}><path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"/><path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z"/><path d="M15 13h4.5a2 2 0 0 1 1.9 1.3"/><path d="M9 13H4.5a2 2 0 0 0-1.9 1.3"/><path d="M15 17h.01"/><path d="M9 17h.01"/></IconWrapper>;
+    const AlertTriangle = ({className}) => <IconWrapper className={className}><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></IconWrapper>;
+    const LayoutGrid = ({className}) => <IconWrapper className={className}><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></IconWrapper>;
+    const History = ({className}) => <IconWrapper className={className}><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></IconWrapper>;
+    const ChevronLeft = ({className}) => <IconWrapper className={className}><path d="m15 18-6-6 6-6"/></IconWrapper>;
+    const ChevronRight = ({className}) => <IconWrapper className={className}><path d="m9 18 6-6-6-6"/></IconWrapper>;
+    const Send = ({className}) => <IconWrapper className={className}><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></IconWrapper>;
+    const X = ({className}) => <IconWrapper className={className}><path d="M18 6 6 18"/><path d="m6 6 12 12"/></IconWrapper>;
+
+    // --- DATI DELLA SIMULAZIONE ---
+    const branoLungo = `Il dibattito sull'evoluzione dei paradigmi educativi nel ventunesimo secolo si concentra sempre più sulla transizione da modelli trasmissivi a modelli costruttivisti, in cui il discente è attivamente coinvolto nella costruzione del proprio sapere. Storicamente, la scuola tradizionale ha privilegiato un approccio nozionistico, centrato sulla figura del docente come depositario assoluto della conoscenza e sullo studente come recettore passivo. Questo modello, figlio della rivoluzione industriale e progettato per formare forza lavoro standardizzata, si rivela oggi inadeguato di fronte alle sfide della società della complessità e dell'informazione.
+
+L'avvento delle tecnologie digitali ha accelerato l'urgenza di un rinnovamento pedagogico. Tuttavia, l'integrazione delle Tecnologie dell'Informazione e della Comunicazione (TIC) non può limitarsi a una mera sostituzione strumentale: utilizzare una lavagna interattiva multimediale (LIM) per proiettare slide testuali ripropone la medesima dinamica frontale della lavagna d'ardesia. Il vero salto epistemologico richiede un ripensamento degli spazi, dei tempi e delle metodologie. Approcci come il 'Flipped Learning' (apprendimento capovolto) o il 'Project-Based Learning' (apprendimento basato sui progetti) mirano a spostare il baricentro dell'azione didattica, trasformando l'aula in un laboratorio di ricerca e cooperazione sociale.
+
+In questo scenario, il docente assume il ruolo di facilitatore, mentore e 'scaffolder' (ponteggiatore), un termine che richiama la teoria della Zona di Sviluppo Prossimale di Lev Vygotskij. Il compito dell'insegnante è quello di predisporre ambienti di apprendimento stimolanti, guidare gli studenti nella decodifica critica delle innumerevoli fonti disponibili in rete e promuovere lo sviluppo delle cosiddette 'soft skills': pensiero critico, creatività, intelligenza emotiva e capacità di lavorare in team.
+
+Non mancano, tuttavia, i rischi legati a questa transizione. Il 'digital divide', ovvero il divario nell'accesso e nelle competenze tecnologiche, rischia di esacerbare le disuguaglianze socio-economiche preesistenti, creando nuove forme di esclusione. Inoltre, un'eccessiva frammentazione dei contenuti digitali può ostacolare lo sviluppo del pensiero analitico profondo, favorendo un'attenzione parziale continua. Pertanto, la vera sfida della scuola contemporanea non è inseguire ciecamente l'innovazione tecnologica, ma governarla attraverso una solida bussola pedagogica, restituendo centralità al fattore umano e all'inclusione educativa.`;
+
+    const quizQuestions = [
+      // 1-5 COMPRENSIONE DEL TESTO
+      { category: "Comprensione del Testo", passage: branoLungo, question: "Secondo il testo, quale difetto principale viene attribuito al modello scolastico tradizionale?", options: [ "Era incentrato sull'uso eccessivo delle tecnologie di base.", "Promuoveva troppo l'intelligenza emotiva a discapito delle nozioni.", "Considerava lo studente un recettore passivo e il docente un depositario assoluto di conoscenza.", "Favoriva l'eccessiva cooperazione tra gli studenti durante le lezioni.", "Era basato esclusivamente sul metodo del 'Flipped Learning'." ], correctAnswerIndex: 2, explanation: "La C è corretta perché il testo afferma esplicitamente che la scuola tradizionale ha 'privilegiato un approccio nozionistico, centrato sulla figura del docente come depositario assoluto della conoscenza e sullo studente come recettore passivo'." },
+      { category: "Comprensione del Testo", passage: branoLungo, question: "Come viene definita l'azione di utilizzare una LIM solo per proiettare slide testuali?", options: [ "Un profondo mutamento di paradigma epistemologico.", "Una mera sostituzione strumentale che ripropone la dinamica frontale.", "Il perfetto esempio di integrazione delle TIC nella pedagogia costruttivista.", "Un approccio noto come 'Project-Based Learning'.", "Una strategia per colmare il 'digital divide'." ], correctAnswerIndex: 1, explanation: "La B è corretta. Il testo spiega che l'uso della LIM solo per proiettare slide non è un'innovazione, ma 'ripropone la medesima dinamica frontale della lavagna d'ardesia'." },
+      { category: "Comprensione del Testo", passage: branoLungo, question: "Nel contesto del brano, cosa significa il termine 'scaffolder' riferito al docente?", options: [ "Un esaminatore severo che valuta le competenze digitali.", "Un ponteggiatore o facilitatore che guida lo studente nella costruzione del sapere.", "Un tecnico informatico incaricato di ridurre il digital divide.", "Un teorico della rivoluzione industriale applicata all'educazione.", "Uno studente che supporta i compagni più in difficoltà." ], correctAnswerIndex: 1, explanation: "La B è corretta perché il testo definisce esplicitamente il docente come 'facilitatore, mentore e scaffolder (ponteggiatore)', ricollegandosi alla teoria di Vygotskij." },
+      { category: "Comprensione del Testo", passage: branoLungo, question: "Quale rischio, secondo l'autore, è legato all'eccessiva frammentazione dei contenuti digitali?", options: [ "La scomparsa definitiva della figura dell'insegnante.", "L'aumento dei costi per l'acquisto di dispositivi elettronici.", "L'ostacolo allo sviluppo del pensiero analitico profondo.", "La riduzione dell'intelligenza emotiva nei lavori di gruppo.", "L'eliminazione del divario socio-economico." ], correctAnswerIndex: 2, explanation: "La C è corretta. Il testo afferma che 'un'eccessiva frammentazione dei contenuti digitali può ostacolare lo sviluppo del pensiero analitico profondo, favorendo un'attenzione parziale continua'." },
+      { category: "Comprensione del Testo", passage: branoLungo, question: "Qual è, in conclusione, la 'vera sfida' della scuola contemporanea secondo l'ultimo paragrafo?", options: [ "Inseguire l'innovazione tecnologica ad ogni costo per modernizzare le aule.", "Governare l'innovazione tecnologica con una solida bussola pedagogica, valorizzando il fattore umano.", "Tornare al modello nozionistico per garantire una disciplina rigorosa.", "Sostituire completamente i docenti con intelligenze artificiali.", "Eliminare le TIC per evitare il rischio di attenzione parziale continua." ], correctAnswerIndex: 1, explanation: "La B è corretta. La sfida non è inseguire ciecamente l'innovazione, ma governarla attraverso una solida bussola pedagogica, restituendo centralità al fattore umano." },
+      
+      // 6-20 COMPETENZA LINGUISTICA
+      { category: "Competenza Linguistica", question: "Quale delle seguenti parole è un sinonimo di 'Pleonastico'?", options: ["Essenziale", "Superfluo", "Plastico", "Fondamentale", "Complesso"], correctAnswerIndex: 1, explanation: "La B è corretta. 'Pleonastico' deriva da pleonasmo e indica qualcosa di non necessario, ripetitivo o superfluo." },
+      { category: "Competenza Linguistica", question: "Individuare la frase che contiene un errore ortografico.", options: [ "È un po' tardi per uscire.", "Vado a fare due passi qualora smettesse di piovere.", "Qual'è il tuo colore preferito?", "Gli ho detto che non sarei andato.", "Da' retta a me, non ci andare." ], correctAnswerIndex: 2, explanation: "La C è corretta (contiene l'errore). Si scrive 'Qual è' senza apostrofo, perché si tratta di un'apocope vocalica (o troncamento) e non di un'elisione." },
+      { category: "Competenza Linguistica", question: "Quale di questi verbi è coniugato al modo congiuntivo, tempo imperfetto, prima persona plurale?", options: ["Andassimo", "Andremmo", "Andammo", "Andiamo", "Fossimo andati"], correctAnswerIndex: 0, explanation: "La A è corretta. 'Che noi andassimo' è congiuntivo imperfetto. 'Andremmo' è condizionale, 'Andammo' è passato remoto." },
+      { category: "Competenza Linguistica", question: "In quale delle seguenti frasi è presente un'iperbole?", options: [ "Il sole splendeva come un diamante.", "Te l'ho ripetuto un milione di volte.", "La sua voce era un sussurro nel vento.", "Ieri sera ho mangiato una pizza e bevuto una birra.", "La vita è un viaggio." ], correctAnswerIndex: 1, explanation: "La B è corretta. L'iperbole è una figura retorica che consiste nell'esagerare per eccesso (o per difetto) un concetto." },
+      { category: "Competenza Linguistica", question: "Completare la seguente proporzione verbale: Inedito sta a Pubblicato come Sconosciuto sta a...", options: ["Ignorato", "Ignoto", "Famoso", "Letto", "Dimenticato"], correctAnswerIndex: 2, explanation: "La C è corretta. La relazione logica è quella di contrarietà (antonimia)." },
+      { category: "Competenza Linguistica", question: "Individua l'esatto contrario della parola 'Pusillanime'.", options: ["Codardo", "Coraggioso", "Povero", "Avido", "Pigro"], correctAnswerIndex: 1, explanation: "La B è corretta. 'Pusillanime' significa vigliacco o codardo. Il suo contrario diretto è coraggioso." },
+      { category: "Competenza Linguistica", question: "Quale delle seguenti alternative completa correttamente la frase? 'Se tu mi _____ prima, non avrei preso questo impegno.'", options: ["avresti avvisato", "avessi avvisato", "avvisavi", "avvisi", "avrai avvisato"], correctAnswerIndex: 1, explanation: "La B è corretta. Nel periodo ipotetico dell'irrealtà nel passato, la protasi richiede il congiuntivo trapassato." },
+      { category: "Competenza Linguistica", question: "Nella frase 'La casa che ho comprato è molto luminosa', la parola 'che' ha funzione logica di:", options: ["Soggetto", "Complemento di specificazione", "Complemento oggetto", "Complemento di termine", "Congiunzione subordinante"], correctAnswerIndex: 2, explanation: "La C è corretta. 'che' (riferito alla casa) risponde alla domanda 'chi? che cosa?', fungendo da complemento oggetto." },
+      { category: "Competenza Linguistica", question: "Identifica la figura retorica presente nell'espressione 'Il dolce affanno'.", options: ["Metonimia", "Sineddoche", "Ossimoro", "Chiasmo", "Anafora"], correctAnswerIndex: 2, explanation: "La C è corretta. L'ossimoro è l'accostamento di due termini di senso opposto all'interno della stessa espressione." },
+      { category: "Competenza Linguistica", question: "Scegli la parola che non appartiene logicamente al gruppo:", options: ["Mela", "Pera", "Banana", "Zucchina", "Pesca"], correctAnswerIndex: 3, explanation: "La D è corretta. Zucchina è un ortaggio/verdura, mentre le altre quattro opzioni sono classificate come frutta." },
+      { category: "Competenza Linguistica", question: "Quale termine è il corretto singolare maschile di 'entusiasti'?", options: ["Entusiasta", "Entusiasto", "Entusiastici", "Entusiasmante", "Entusiasmato"], correctAnswerIndex: 0, explanation: "La A è corretta. 'entusiasta' è invariabile al maschile e femminile singolare. 'Entusiasto' non esiste." },
+      { category: "Competenza Linguistica", question: "Nella frase 'Il libro, pur essendo lungo, l'ho letto in due giorni', che tipo di proposizione subordinata è 'pur essendo lungo'?", options: ["Causale", "Concessiva", "Temporale", "Modale", "Finale"], correctAnswerIndex: 1, explanation: "La B è corretta. Le proposizioni concessive indicano il fatto nonostante il quale si verifica quanto espresso nella reggente." },
+      { category: "Competenza Linguistica", question: "Se 'Lapalissiano' significa evidente, 'Chimerico' significa:", options: ["Illogico", "Irrealizzabile", "Pericoloso", "Aggressivo", "Mostruoso"], correctAnswerIndex: 1, explanation: "La B è corretta. Qualcosa di chimerico (derivante dalla Chimera) è un'illusione, qualcosa di irrealizzabile." },
+      { category: "Competenza Linguistica", question: "Trova l'intruso tra i seguenti nomi collettivi:", options: ["Branco", "Flotta", "Foglia", "Stormo", "Gregge"], correctAnswerIndex: 2, explanation: "La C è corretta. 'Foglia' è un nome singolo (il suo collettivo sarebbe 'fogliame')." },
+      { category: "Competenza Linguistica", question: "Qual è la corretta sillabazione della parola 'Acquazzone'?", options: ["A-cquaz-zo-ne", "Ac-quaz-zo-ne", "Ac-qua-zzo-ne", "A-cqu-az-zo-ne", "Ac-qu-az-zo-ne"], correctAnswerIndex: 1, explanation: "La B è corretta. Nelle parole con 'cq', la 'c' si separa dalla 'q'. Le doppie (zz) si separano. Quindi: Ac-quaz-zo-ne." },
+
+      // 21-40 RAGIONAMENTO LOGICO
+      { category: "Ragionamento Logico", question: "Sillogismo: 'Tutti gli insegnanti sono laureati. Qualche insegnante è sportivo.' Quale conclusione è logicamente inoppugnabile?", options: [ "Tutti i laureati sono sportivi.", "Qualche laureato è sportivo.", "Chi non è sportivo non è laureato.", "Nessun laureato è sportivo.", "Tutti gli sportivi sono insegnanti." ], correctAnswerIndex: 1, explanation: "La B è corretta. Se tutti gli I sono L, e alcuni I sono S, quegli I che sono S devono per forza essere anche L." },
+      { category: "Ragionamento Logico", question: "Se A = B, e B < C, e D > C, quale delle seguenti affermazioni è certamente vera?", options: ["A > C", "D < B", "A < D", "B = D", "C < A"], correctAnswerIndex: 2, explanation: "La C è corretta. Avendo D > C > B = A, ne consegue per proprietà transitiva che D > A (ovvero A < D)." },
+      { category: "Ragionamento Logico", question: "In una scatola ci sono 10 palline rosse, 8 blu e 5 verdi. Qual è il numero MINIMO di palline da estrarre (senza guardare) per avere l'ASSOLUTA certezza di averne presa almeno una verde?", options: ["6", "11", "18", "19", "5"], correctAnswerIndex: 3, explanation: "La D è corretta. Nel caso peggiore, potremmo pescare prima tutte le rosse (10) e tutte le blu (8) per 18 estrazioni. La 19esima sarà verde." },
+      { category: "Ragionamento Logico", question: "Una lumaca deve risalire un pozzo profondo 10 metri. Di giorno sale di 3 metri, di notte scivola giù di 2 metri. In quanti giorni arriverà al bordo del pozzo (considerando che quando arriva in cima non scivola più)?", options: ["10 giorni", "9 giorni", "8 giorni", "7 giorni", "6 giorni"], correctAnswerIndex: 2, explanation: "La C è corretta. Il suo guadagno netto è di 1 metro al giorno. Dopo 7 giorni si trova a 7 metri di altezza. L'ottavo giorno, salendo di 3 metri, arriva a 10 e non scivola più." },
+      { category: "Ragionamento Logico", question: "Se il giorno prima di ieri era Martedì, che giorno sarà dopodomani?", options: ["Sabato", "Domenica", "Venerdì", "Giovedì", "Lunedì"], correctAnswerIndex: 0, explanation: "La A è corretta. Se l'altro ieri era Martedì, oggi è Giovedì. Di conseguenza, dopodomani sarà Sabato." },
+      { category: "Ragionamento Logico", question: "Completa la serie numerica: 2, 6, 12, 20, 30, ...", options: ["40", "42", "38", "36", "44"], correctAnswerIndex: 1, explanation: "La B è corretta. La differenza tra i numeri consecutivi cresce di 2 ad ogni passo: +4, +6, +8, +10. Il prossimo passo sarà +12, quindi 30 + 12 = 42." },
+      { category: "Ragionamento Logico", question: "Tutti i filosofi sono pensatori. Nessun pensatore è superficiale. Quindi:", options: [ "Alcuni filosofi sono superficiali.", "Tutti i pensatori sono filosofi.", "Nessun filosofo è superficiale.", "Qualche persona superficiale è un filosofo.", "Tutti i superficiali sono pensatori." ], correctAnswerIndex: 2, explanation: "La C è corretta. Se l'insieme dei Filosofi è incluso nei Pensatori, e i Pensatori non hanno intersezioni con i Superficiali, allora F non ha intersezioni con S." },
+      { category: "Ragionamento Logico", question: "Immagina un cubo di legno di dimensioni 3x3x3 verniciato di rosso esternamente. Se viene tagliato in 27 cubetti 1x1x1, quanti di questi cubetti avranno esattamente DUE facce verniciate di rosso?", options: ["8", "6", "12", "4", "27"], correctAnswerIndex: 2, explanation: "La C è corretta. I cubetti con 2 facce verniciate sono quelli posizionati al centro degli spigoli (bordi). Un cubo ha 12 spigoli." },
+      { category: "Ragionamento Logico", question: "L'orologio di un campanile batte un rintocco ogni mezz'ora e i rintocchi corrispondenti all'ora ad ogni ora piena. Quanti rintocchi suona in totale tra le 12:15 e le 15:45?", options: ["9", "10", "11", "12", "13"], correctAnswerIndex: 1, explanation: "La B è corretta. Conta: 12:30(1), 13:00(1), 13:30(1), 14:00(2), 14:30(1), 15:00(3), 15:30(1). Somma: 10." },
+      { category: "Ragionamento Logico", question: "Marco è più alto di Paolo. Giovanni è più basso di Marco. Chi è il più basso dei tre?", options: ["Marco", "Paolo", "Giovanni", "Non è possibile determinarlo", "Sono tutti alti uguali"], correctAnswerIndex: 3, explanation: "La D è corretta. Sappiamo che M > P e M > G. Non c'è relazione diretta tra Paolo e Giovanni." },
+      { category: "Ragionamento Logico", question: "Individua la lettera che completa la serie: A, C, F, J, ...", options: ["M", "N", "O", "P", "L"], correctAnswerIndex: 2, explanation: "La C è corretta. I salti tra le lettere aumentano progressivamente: +2, +3, +4. Il successivo sarà +5 da J, arrivando alla lettera O." },
+      { category: "Ragionamento Logico", question: "Cinque macchine impiegano cinque minuti per produrre cinque pezzi. Quanto tempo impiegheranno 100 macchine per produrre 100 pezzi?", options: ["100 minuti", "5 minuti", "1 minuto", "50 minuti", "20 minuti"], correctAnswerIndex: 1, explanation: "La B è corretta. 1 macchina impiega esattamente 5 minuti per produrre 1 pezzo. 100 macchine, lavorando in parallelo, impiegheranno sempre 5 minuti." },
+      { category: "Ragionamento Logico", question: "Mio nonno ha 4 figli maschi. Ogni figlio maschio ha 3 sorelle. Quanti figli ha in tutto mio nonno?", options: ["12", "16", "7", "8", "15"], correctAnswerIndex: 2, explanation: "La C è corretta. I 4 figli maschi sono fratelli tra loro. Hanno tutti le stesse 3 sorelle. Quindi in totale 4+3=7 figli." },
+      { category: "Ragionamento Logico", question: "A quale frazione corrisponde il 25% di 1/4?", options: ["1/4", "1/8", "1/16", "1/2", "1/10"], correctAnswerIndex: 2, explanation: "La C è corretta. Il 25% equivale a dire 'un quarto' (1/4). 1/4 moltiplicato per 1/4 fa 1/16." },
+      { category: "Ragionamento Logico", question: "Se ANELLO sta a DITO come ORECCHINO sta a:", options: ["Collo", "Bracciale", "Lobo", "Oro", "Gioielliere"], correctAnswerIndex: 2, explanation: "La C è corretta. La relazione è 'Oggetto sta alla parte del corpo in cui si indossa'." },
+      { category: "Ragionamento Logico", question: "Quale numero manca per completare il cerchio logico: 3, 5, 8, 13, 21, ...?", options: ["30", "34", "31", "29", "42"], correctAnswerIndex: 1, explanation: "La B è corretta. Questa è la serie di Fibonacci. Ogni numero è la somma dei due precedenti: 13+21=34." },
+      { category: "Ragionamento Logico", question: "In una gara di corsa, superi la persona che si trova al secondo posto. In quale posizione ti trovi ora?", options: ["Primo", "Secondo", "Terzo", "Ultimo", "Penultimo"], correctAnswerIndex: 1, explanation: "La B è corretta. Se superi il secondo, prendi esattamente il suo posto e diventi secondo." },
+      { category: "Ragionamento Logico", question: "Qual è la parola intrusa per struttura logica?", options: ["Radar", "Osso", "Anna", "Cassa", "Kayak"], correctAnswerIndex: 3, explanation: "La D è corretta. Sono tutti palindromi tranne 'Cassa'." },
+      { category: "Ragionamento Logico", question: "Quanti mesi hanno 28 giorni?", options: ["1", "Tutti e 12", "Solo Febbraio", "Nessuno", "6"], correctAnswerIndex: 1, explanation: "La B è corretta. Tutti i 12 mesi del calendario hanno almeno 28 giorni al loro interno." },
+      { category: "Ragionamento Logico", question: "Un contadino ha 17 pecore. Muoiono tutte tranne 9. Quante pecore gli restano?", options: ["8", "17", "0", "9", "Tutte"], correctAnswerIndex: 3, explanation: "La D è corretta. Il testo dice esplicitamente 'muoiono tutte tranne 9'. Le pecore superstiti sono esattamente 9." },
+      
+      // 41-60 CULTURA LETTERARIA, STORICO-SOCIALE
+      { category: "Cultura Letteraria", question: "Quale autore ha scritto 'Il Fu Mattia Pascal'?", options: ["Gabriele D'Annunzio", "Italo Svevo", "Giovanni Verga", "Luigi Pirandello", "Alessandro Manzoni"], correctAnswerIndex: 3, explanation: "La D è corretta. È uno dei romanzi più celebri di Luigi Pirandello (1904)." },
+      { category: "Cultura Letteraria", question: "A quale corrente letteraria appartiene Giovanni Verga?", options: ["Ermetismo", "Romanticismo", "Verismo", "Futurismo", "Neoclassicismo"], correctAnswerIndex: 2, explanation: "La C è corretta. Verga è il massimo esponente del Verismo italiano." },
+      { category: "Cultura Letteraria", question: "Chi è l'autore della celebre poesia 'L'Infinito'?", options: ["Giosuè Carducci", "Giovanni Pascoli", "Giacomo Leopardi", "Dante Alighieri", "Eugenio Montale"], correctAnswerIndex: 2, explanation: "La C è corretta. L'Infinito è uno degli idilli più famosi di Giacomo Leopardi." },
+      { category: "Cultura Letteraria", question: "In quale cantica della Divina Commedia Dante incontra Virgilio per la prima volta?", options: ["Inferno", "Purgatorio", "Paradiso", "Nella Vita Nova", "In nessuna"], correctAnswerIndex: 0, explanation: "La A è corretta. Dante incontra l'ombra di Virgilio nel Canto I dell'Inferno, nella selva oscura." },
+      { category: "Cultura Letteraria", question: "Chi ha scritto 'La Coscienza di Zeno'?", options: ["Umberto Eco", "Primo Levi", "Italo Calvino", "Italo Svevo", "Cesare Pavese"], correctAnswerIndex: 3, explanation: "La D è corretta. 'La coscienza di Zeno' è un romanzo psicoanalitico di Italo Svevo (1923)." },
+      { category: "Cultura Storico-Sociale", question: "In che anno, con il Referendum, in Italia si scelse la Repubblica ponendo fine alla Monarchia?", options: ["1945", "1946", "1948", "1922", "1861"], correctAnswerIndex: 1, explanation: "La B è corretta. Il Referendum istituzionale si tenne il 2 e 3 giugno 1946." },
+      { category: "Cultura Storico-Sociale", question: "Quale evento storico segna convenzionalmente l'inizio dell'Età Moderna?", options: ["Caduta dell'Impero Romano", "Rivoluzione Industriale", "Scoperta dell'America", "Rivoluzione Francese", "Congresso di Vienna"], correctAnswerIndex: 2, explanation: "La C è corretta. L'anno 1492 (Scoperta dell'America) segna la fine del Medioevo." },
+      { category: "Cultura Storico-Sociale", question: "La Costituzione Italiana entrò in vigore il:", options: ["1 Gennaio 1948", "2 Giugno 1946", "25 Aprile 1945", "1 Maggio 1947", "11 Febbraio 1929"], correctAnswerIndex: 0, explanation: "La A è corretta. Entrò in vigore il 1º gennaio 1948." },
+      { category: "Educazione Civica", question: "L'articolo 3 della Costituzione Italiana sancisce il principio di:", options: ["Libertà di stampa", "Uguaglianza", "Diritto al lavoro", "Pace", "Tutela del paesaggio"], correctAnswerIndex: 1, explanation: "La B è corretta. L'Art. 3 sancisce l'uguaglianza formale e sostanziale." },
+      { category: "Educazione Civica", question: "In Italia, da chi viene eletto il Presidente della Repubblica?", options: ["Dai cittadini", "Dal Presidente del Consiglio", "Dal Parlamento in seduta comune con i delegati regionali", "Dalla Corte Costituzionale", "Dal Senato"], correctAnswerIndex: 2, explanation: "La C è corretta." },
+      { category: "Pedagogia", question: "Quale pedagogista fondò nel 1907 la prima 'Casa dei Bambini'?", options: ["Don Milani", "Gianni Rodari", "Maria Montessori", "Loris Malaguzzi", "Mario Lodi"], correctAnswerIndex: 2, explanation: "La C è corretta. Maria Montessori aprì la prima 'Casa dei Bambini' a Roma." },
+      { category: "Psicologia", question: "Jean Piaget è noto principalmente per i suoi studi sullo:", options: ["Sviluppo psicosessuale", "Condizionamento operante", "Sviluppo cognitivo infantile", "Costruttivismo sociale", "Psicoanalisi"], correctAnswerIndex: 2, explanation: "La C è corretta. Piaget formulò la teoria sugli stadi dello sviluppo cognitivo infantile." },
+      { category: "Geografia", question: "Qual è la capitale della Lettonia?", options: ["Vilnius", "Riga", "Tallinn", "Helsinki", "Minsk"], correctAnswerIndex: 1, explanation: "La B è corretta. Riga è la capitale della Lettonia." },
+      { category: "Geografia", question: "Il fiume Po nasce dal:", options: ["Gran Sasso", "Monte Bianco", "Monviso", "Monte Rosa", "Cervino"], correctAnswerIndex: 2, explanation: "La C è corretta. Nasce dalle pendici del Monviso." },
+      { category: "Geografia", question: "In quale continente si trova la catena montuosa delle Ande?", options: ["Asia", "Africa", "America del Nord", "America del Sud", "Oceania"], correctAnswerIndex: 3, explanation: "La D è corretta. Attraversa l'America del Sud." },
+      { category: "Cultura Generale", question: "Cosa si intende con la sigla 'ONU'?", options: ["Organizzazione Nazionale Umanitaria", "Organizzazione dei Nuclei Uniti", "Organizzazione delle Nazioni Unite", "Ordinamento Nordico Unificato", "Opera Universitaria"], correctAnswerIndex: 2, explanation: "La C è corretta." },
+      { category: "Cultura Generale", question: "Chi dipinse il celebre affresco de 'L'Ultima Cena' a Milano?", options: ["Michelangelo", "Raffaello", "Leonardo da Vinci", "Giotto", "Botticelli"], correctAnswerIndex: 2, explanation: "La C è corretta. Leonardo da Vinci." },
+      { category: "Storia", question: "Quale evento scatenò formalmente l'inizio della Prima Guerra Mondiale?", options: ["Invasione della Polonia", "Attentato di Sarajevo", "Presa della Bastiglia", "Bombardamento di Pearl Harbor", "Rivoluzione Russa"], correctAnswerIndex: 1, explanation: "La B è corretta. L'attentato di Sarajevo (28 giugno 1914)." },
+      { category: "Storia", question: "Il 'Muro di Berlino' cadde nell'anno:", options: ["1989", "1991", "1945", "1968", "1980"], correctAnswerIndex: 0, explanation: "La A è corretta. Fu abbattuto il 9 novembre 1989." },
+      { category: "Cultura Generale", question: "Quale di questi NON è un organo istituzionale dell'Unione Europea?", options: ["Parlamento Europeo", "Commissione Europea", "Corte Suprema Americana", "Consiglio dell'UE", "Banca Centrale Europea"], correctAnswerIndex: 2, explanation: "La C è corretta. La Corte Suprema appartiene agli Stati Uniti." },
+
+      // 61-80 CULTURA MATEMATICO-SCIENTIFICA
+      { category: "Matematica", question: "Calcola il 15% di 200.", options: ["15", "30", "45", "20", "200"], correctAnswerIndex: 1, explanation: "La B è corretta. (200 * 15) / 100 = 30." },
+      { category: "Matematica", question: "Risolvi l'equazione di primo grado: 3x - 5 = 10", options: ["x = 3", "x = 15", "x = 5", "x = 10", "x = 1"], correctAnswerIndex: 2, explanation: "La C è corretta. 3x = 15, quindi x = 5." },
+      { category: "Matematica", question: "Qual è il Minimo Comune Multiplo (m.c.m.) tra 12 e 15?", options: ["3", "60", "120", "30", "180"], correctAnswerIndex: 1, explanation: "La B è corretta. 12 = 2^2 * 3; 15 = 3 * 5. m.c.m. = 2^2 * 3 * 5 = 60." },
+      { category: "Matematica", question: "Qual è l'area di un triangolo rettangolo i cui cateti misurano 6 cm e 8 cm?", options: ["48 cm²", "14 cm²", "24 cm²", "20 cm²", "10 cm²"], correctAnswerIndex: 2, explanation: "La C è corretta. (6 * 8) / 2 = 24 cm²." },
+      { category: "Matematica", question: "Lanciando un dado regolare a 6 facce, qual è la probabilità di ottenere un numero pari?", options: ["1/6", "2/6", "1/2", "3/4", "1"], correctAnswerIndex: 2, explanation: "La C è corretta. I casi favorevoli sono 3 (2,4,6) su 6 totali = 1/2." },
+      { category: "Matematica", question: "Il valore dell'espressione 2 + 3 * 4 è:", options: ["20", "24", "14", "9", "10"], correctAnswerIndex: 2, explanation: "La C è corretta. 3 * 4 si esegue prima: 12 + 2 = 14." },
+      { category: "Matematica", question: "Un pantalone costa 80 euro, ed è scontato del 25%. Quanto costa oggi?", options: ["60 euro", "55 euro", "25 euro", "65 euro", "75 euro"], correctAnswerIndex: 0, explanation: "La A è corretta. Il 25% di 80 è 20. 80 - 20 = 60 euro." },
+      { category: "Matematica", question: "Quale fra le seguenti frazioni rappresenta il numero più grande?", options: ["1/2", "3/4", "2/5", "4/5", "7/10"], correctAnswerIndex: 3, explanation: "La D è corretta. 4/5 = 0.8, il più grande tra tutti." },
+      { category: "Biologia", question: "Quale organulo cellulare è considerato la 'centrale energetica' della cellula?", options: ["Ribosoma", "Apparato di Golgi", "Mitocondrio", "Lisosoma", "Cloroplasto"], correctAnswerIndex: 2, explanation: "La C è corretta. I mitocondri producono energia (ATP)." },
+      { category: "Biologia", question: "Quali sono le quattro basi azotate del DNA?", options: ["Adenina, Uracile, Guanina, Citosina", "Adenina, Timina, Guanina, Citosina", "Adenina, Timina, Caffeina, Citosina", "Guanina, Uracile, Timina, Prolina", "Adenina, Guanina, Tirosina, Citosina"], correctAnswerIndex: 1, explanation: "La B è corretta." },
+      { category: "Biologia", question: "Che cos'è la fotosintesi clorofilliana?", options: [ "Un processo digestivo.", "Il processo che converte CO2 e acqua in glucosio e O2 usando energia solare.", "La respirazione notturna.", "La riproduzione sessuata.", "Potabilizzazione." ], correctAnswerIndex: 1, explanation: "La B è corretta." },
+      { category: "Biologia", question: "Il sangue umano 'donatore universale' è:", options: ["Gruppo A", "Gruppo B", "Gruppo AB", "Gruppo 0", "Nessuno"], correctAnswerIndex: 3, explanation: "La D è corretta. Il gruppo 0 non presenta antigeni A e B sulla superficie." },
+      { category: "Chimica", question: "Qual è il simbolo chimico del Sodio?", options: ["So", "S", "Na", "Ni", "Nd"], correctAnswerIndex: 2, explanation: "La C è corretta. Na, derivante dal nome latino 'Natrium'." },
+      { category: "Chimica", question: "Il pH dell'acqua pura a temperatura ambiente è neutro. Qual è il valore?", options: ["0", "1", "7", "10", "14"], correctAnswerIndex: 2, explanation: "La C è corretta. pH = 7." },
+      { category: "Chimica", question: "Il passaggio da solido direttamente a gas si chiama:", options: ["Fusione", "Evaporazione", "Condensazione", "Sublimazione", "Brinamento"], correctAnswerIndex: 3, explanation: "La D è corretta. Si definisce sublimazione." },
+      { category: "Chimica", question: "Di quali particelle subatomiche è composto il nucleo di un atomo?", options: ["Elettroni e Protoni", "Solo Neutroni", "Elettroni e Neutroni", "Protoni e Neutroni", "Quark ed Elettroni"], correctAnswerIndex: 3, explanation: "La D è corretta. Formato da nucleoni: Protoni e Neutroni." },
+      { category: "Scienze della Terra", question: "In quale strato dell'atmosfera si trova l'ozonosfera?", options: ["Troposfera", "Stratosfera", "Mesosfera", "Termosfera", "Esosfera"], correctAnswerIndex: 1, explanation: "La B è corretta. L'ozonosfera si trova nella Stratosfera." },
+      { category: "Fisica", question: "Cosa formula il Principio di Inerzia?", options: [ "A ogni azione corrisponde una reazione.", "F = m*a.", "La gravità attira i corpi al centro.", "Un corpo persevera nel suo stato finché non interviene una forza esterna.", "L'energia si trasforma." ], correctAnswerIndex: 3, explanation: "La D è corretta." },
+      { category: "Astronomia", question: "Qual è il pianeta più grande del Sistema Solare?", options: ["Terra", "Saturno", "Giove", "Marte", "Urano"], correctAnswerIndex: 2, explanation: "La C è corretta. Giove è il gigante gassoso più grande." },
+      { category: "Fisica", question: "Un treno viaggia a 120 km/h. Quanto spazio percorre in 45 minuti?", options: ["120 km", "90 km", "60 km", "100 km", "80 km"], correctAnswerIndex: 1, explanation: "La B è corretta. 45 minuti = 3/4 di ora; 3/4 di 120 = 90 km." }
+    ];
+
+    // --- GENERAZIONE ID UNIVOCO (HASH) BASATO SULLE DOMANDE ---
+    // Questo garantisce che file HTML identici usino la stessa memoria, 
+    // ma file con test (e domande) diverse usino celle di memoria totalmente separate.
+    const generateTestId = () => {
+      const testContent = quizQuestions.map(q => q.question).join('|');
+      let hash = 0;
+      for (let i = 0; i < testContent.length; i++) {
+        const char = testContent.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash = hash & hash; // Converte a intero a 32 bit
+      }
+      return "sfp_test_" + Math.abs(hash);
+    };
+    
+    const TEST_ID = generateTestId();
+
+    // --- COMPONENTE REACT PRINCIPALE ---
+    function App() {
+      const [started, setStarted] = useState(false);
+      const [currentIndex, setCurrentIndex] = useState(0);
+      
+      // userAnswers mantiene lo stato di ogni domanda: null se non risposta, oppure { selectedIndex, isCorrect, points }
+      const [userAnswers, setUserAnswers] = useState(Array(quizQuestions.length).fill(null));
+      
+      const [testFinished, setTestFinished] = useState(false);
+      const [showGridModal, setShowGridModal] = useState(false);
+      const [showSubmitModal, setShowSubmitModal] = useState(false);
+      const [hasSavedSession, setHasSavedSession] = useState(false);
+
+      // Caricamento iniziale per verificare se c'è una sessione salvata in memoria (specifica per questo TEST_ID)
+      useEffect(() => {
+        const savedAnswers = localStorage.getItem(`${TEST_ID}_answers`);
+        if (savedAnswers) {
+          setHasSavedSession(true);
+        }
+      }, []);
+
+      // Salvataggio automatico progressi ad ogni modifica (se il test è iniziato)
+      useEffect(() => {
+        if (started && !testFinished) {
+          localStorage.setItem(`${TEST_ID}_answers`, JSON.stringify(userAnswers));
+          localStorage.setItem(`${TEST_ID}_current_index`, currentIndex.toString());
+        }
+      }, [userAnswers, currentIndex, started, testFinished]);
+
+      useEffect(() => {
+        if (started) {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      }, [currentIndex, started]);
+
+      const startTest = () => {
+        localStorage.removeItem(`${TEST_ID}_answers`);
+        localStorage.removeItem(`${TEST_ID}_current_index`);
+        setHasSavedSession(false);
+        setStarted(true);
+        setCurrentIndex(0);
+        setUserAnswers(Array(quizQuestions.length).fill(null));
+        setTestFinished(false);
+        setShowGridModal(false);
+        setShowSubmitModal(false);
+      };
+
+      const resumeTest = () => {
+        try {
+          const savedAnswers = JSON.parse(localStorage.getItem(`${TEST_ID}_answers`));
+          const savedIndex = parseInt(localStorage.getItem(`${TEST_ID}_current_index`) || '0', 10);
+          
+          if (savedAnswers && Array.isArray(savedAnswers)) {
+            setUserAnswers(savedAnswers);
+            setCurrentIndex(savedIndex);
+            setStarted(true);
+            setTestFinished(false);
+            setShowGridModal(false);
+            setShowSubmitModal(false);
+          } else {
+            startTest(); // fallback se i dati sono corrotti
+          }
+        } catch (e) {
+          startTest();
+        }
+      };
+
+      const currentAnswer = userAnswers[currentIndex];
+      const isAnswered = currentAnswer !== null;
+
+      const handleSelectOption = (index) => {
+        if (isAnswered) return; // Se ha già risposto, non fa nulla (feedback bloccato)
+        
+        const isCorrect = index === quizQuestions[currentIndex].correctAnswerIndex;
+        let pointsToAdd = isCorrect ? 1 : -0.25;
+        
+        const newAnswers = [...userAnswers];
+        newAnswers[currentIndex] = {
+          selectedIndex: index,
+          isCorrect,
+          points: pointsToAdd
+        };
+        setUserAnswers(newAnswers);
+      };
+
+      const handleNext = () => {
+        if (currentIndex < quizQuestions.length - 1) {
+          setCurrentIndex(c => c + 1);
+        }
+      };
+
+      const handlePrev = () => {
+        if (currentIndex > 0) {
+          setCurrentIndex(c => c - 1);
+        }
+      };
+
+      const submitTest = () => {
+        localStorage.removeItem(`${TEST_ID}_answers`);
+        localStorage.removeItem(`${TEST_ID}_current_index`);
+        setHasSavedSession(false);
+        setShowSubmitModal(false);
+        setTestFinished(true);
+      };
+
+      const currentScore = userAnswers.reduce((sum, ans) => sum + (ans ? ans.points : 0), 0);
+      const answeredCount = userAnswers.filter(ans => ans !== null).length;
+
+      if (!started) {
+        return (
+          <div className="min-h-screen flex items-center justify-center p-6">
+            <div className="bg-white max-w-2xl w-full rounded-2xl shadow-xl p-10 text-center border-t-8 border-indigo-600">
+              <BookOpen className="w-20 h-20 text-indigo-600 mx-auto mb-6" />
+              <h1 className="text-4xl font-extrabold text-slate-800 mb-4 tracking-tight">Simulazione Ufficiale Test SFP</h1>
+              <p className="text-xl text-slate-600 mb-8 font-medium">Scienze della Formazione Primaria 2026/2027</p>
+              
+              <div className="bg-slate-100 rounded-xl p-6 mb-8 text-left space-y-4">
+                <h3 className="font-bold text-slate-800 text-lg flex items-center gap-2">
+                  <ListOrdered className="w-5 h-5 text-indigo-600"/> Struttura del Test ({quizQuestions.length} Quesiti)
+                </h3>
+                <ul className="list-disc pl-6 text-slate-700 space-y-2">
+                  <li><strong>Competenza linguistica e ragionamento logico:</strong> 40 quesiti</li>
+                  <li><strong>Cultura letteraria, storico-sociale e geografica:</strong> 20 quesiti</li>
+                  <li><strong>Cultura matematico-scientifica:</strong> 20 quesiti</li>
+                </ul>
+                <div className="border-t border-slate-300 pt-4 mt-4">
+                  <h3 className="font-bold text-slate-800 flex items-center gap-2 mb-2">
+                    <BrainCircuit className="w-5 h-5 text-indigo-600"/> Criteri di Valutazione Ministeriale
+                  </h3>
+                  <div className="grid grid-cols-3 gap-4 text-center">
+                    <div className="bg-green-100 text-green-800 p-3 rounded-lg font-semibold">+1 Punto <br/><span className="text-sm font-normal">Risposta esatta</span></div>
+                    <div className="bg-red-100 text-red-800 p-3 rounded-lg font-semibold">-0.25 Punti <br/><span className="text-sm font-normal">Risposta errata</span></div>
+                    <div className="bg-slate-200 text-slate-800 p-3 rounded-lg font-semibold">0 Punti <br/><span className="text-sm font-normal">Non data</span></div>
+                  </div>
+                </div>
+                <div className="bg-yellow-50 text-yellow-800 p-4 rounded-lg text-sm border border-yellow-200 flex items-start gap-3 mt-4">
+                  <AlertTriangle className="w-6 h-6 shrink-0"/>
+                  <p><strong>Modalità Attiva con Navigazione Libera:</strong> Riceverai feedback immediato alle tue risposte, e potrai saltare e tornare indietro sulle domande quando preferisci grazie alla griglia di navigazione.</p>
+                </div>
+              </div>
+              
+              {hasSavedSession ? (
+                <div className="bg-indigo-50 border-2 border-indigo-200 p-6 rounded-xl text-center shadow-inner">
+                  <h3 className="text-xl font-bold text-indigo-900 mb-2 flex items-center justify-center gap-2">
+                    <History className="w-6 h-6"/> Sessione in Sospeso
+                  </h3>
+                  <p className="text-indigo-700 mb-6 font-medium">Hai un test iniziato in precedenza. Vuoi riprendere da dove avevi lasciato?</p>
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    <button onClick={resumeTest} className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-6 rounded-xl transition-all shadow-md flex items-center justify-center gap-2">
+                      <Play className="w-5 h-5 fill-current"/> Riprendi Test
+                    </button>
+                    <button onClick={startTest} className="flex-1 bg-white border-2 border-slate-300 hover:border-slate-400 text-slate-700 font-bold py-4 px-6 rounded-xl transition-all flex items-center justify-center gap-2">
+                      <RotateCcw className="w-5 h-5"/> Inizia da capo
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <button onClick={startTest} className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-8 rounded-xl text-xl transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-3 transform hover:-translate-y-1">
+                  <Play className="w-6 h-6 fill-current"/> Inizia la Simulazione
+                </button>
+              )}
+            </div>
+          </div>
+        );
+      }
+
+      if (testFinished) {
+        const correctAnswers = userAnswers.filter(a => a && a.isCorrect).length;
+        const wrongAnswers = userAnswers.filter(a => a && !a.isCorrect).length;
+        const skippedAnswers = quizQuestions.length - answeredCount;
+
+        return (
+          <div className="min-h-screen p-6 flex items-center justify-center">
+            <div className="bg-white max-w-3xl w-full rounded-2xl shadow-xl p-10 text-center border-t-8 border-indigo-600">
+              <Award className="w-24 h-24 text-indigo-600 mx-auto mb-6" />
+              <h2 className="text-4xl font-extrabold text-slate-800 mb-2">Risultato Finale</h2>
+              <p className="text-slate-600 mb-8">Hai completato la simulazione del test per Scienze della Formazione Primaria.</p>
+              
+              <div className="bg-indigo-50 rounded-2xl p-8 mb-8">
+                <div className="text-7xl font-black text-indigo-700 mb-2">{currentScore.toFixed(2)}<span className="text-3xl text-indigo-400">/{quizQuestions.length}</span></div>
+                <p className="text-indigo-800 font-medium">Punteggio Ministeriale Calcolato</p>
+              </div>
+
+              <div className="grid grid-cols-3 gap-4 mb-10">
+                <div className="bg-green-50 p-4 rounded-xl border border-green-200">
+                  <div className="text-3xl font-bold text-green-700">{correctAnswers}</div>
+                  <div className="text-sm text-green-800 font-medium">Risposte Corrette</div>
+                </div>
+                <div className="bg-red-50 p-4 rounded-xl border border-red-200">
+                  <div className="text-3xl font-bold text-red-700">{wrongAnswers}</div>
+                  <div className="text-sm text-red-800 font-medium">Risposte Errate</div>
+                </div>
+                <div className="bg-slate-100 p-4 rounded-xl border border-slate-200">
+                  <div className="text-3xl font-bold text-slate-700">{skippedAnswers}</div>
+                  <div className="text-sm text-slate-800 font-medium">Non Risposte</div>
+                </div>
+              </div>
+
+              <button onClick={startTest} className="bg-slate-800 hover:bg-slate-900 text-white font-bold py-3 px-8 rounded-xl transition-all shadow-md flex items-center justify-center gap-2 mx-auto">
+                <RotateCcw className="w-5 h-5"/> Ripeti il Test
+              </button>
+            </div>
+          </div>
+        );
+      }
+
+      const currentQuestion = quizQuestions[currentIndex];
+
+      return (
+        <div className="min-h-screen flex flex-col font-sans pb-24">
+          {/* Header */}
+          <header className="bg-white shadow-sm border-b sticky top-0 z-20">
+            <div className="max-w-7xl mx-auto px-4 py-3 flex flex-wrap lg:flex-nowrap items-center justify-between gap-4">
+              <div className="flex items-center gap-2">
+                <div className="bg-indigo-100 p-2 rounded-lg hidden sm:block"><BookOpen className="w-5 h-5 text-indigo-700"/></div>
+                <span className="font-bold text-slate-800 tracking-tight whitespace-nowrap">Esame SFP</span>
+              </div>
+              
+              <div className="flex-1 w-full lg:max-w-md mx-2 order-3 lg:order-none">
+                <div className="flex justify-between text-xs font-bold text-slate-500 mb-1">
+                  <span>Domanda {currentIndex + 1} di {quizQuestions.length}</span>
+                  <span>{Math.round((answeredCount / quizQuestions.length) * 100)}% Completato</span>
+                </div>
+                <div className="w-full bg-slate-200 rounded-full h-2.5">
+                  <div className="bg-indigo-600 h-2.5 rounded-full transition-all duration-300" style={{ width: `${(answeredCount / quizQuestions.length) * 100}%` }}></div>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 lg:gap-4">
+                <div className="text-sm font-semibold bg-slate-100 text-slate-700 px-3 py-1.5 rounded-lg border border-slate-200 hidden sm:block">
+                  Punteggio: <span className="text-indigo-700">{currentScore.toFixed(2)}</span>
+                </div>
+                
+                <button onClick={() => setShowGridModal(true)} className="flex items-center gap-2 px-3 py-1.5 bg-white border-2 border-slate-200 hover:border-indigo-400 rounded-lg font-bold text-slate-700 transition-colors">
+                  <LayoutGrid className="w-4 h-4 text-indigo-600"/> <span className="hidden sm:inline">Griglia</span>
+                </button>
+
+                <button onClick={() => setShowSubmitModal(true)} className="flex items-center gap-2 px-4 py-1.5 bg-slate-800 hover:bg-slate-900 text-white rounded-lg font-bold transition-colors">
+                  <Send className="w-4 h-4"/> <span className="hidden sm:inline">Consegna</span>
+                </button>
+              </div>
+            </div>
+          </header>
+
+          {/* Main Content */}
+          <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 flex flex-col">
+            <div className="mb-4 flex justify-between items-center">
+              <span className="inline-block bg-indigo-100 text-indigo-800 text-xs px-3 py-1 rounded-full font-bold uppercase tracking-wider">
+                {currentQuestion.category}
+              </span>
+              {!isAnswered && <span className="text-xs font-bold text-slate-400">Non risposta</span>}
+            </div>
+
+            <div className={currentQuestion.passage ? "flex flex-col lg:flex-row gap-8" : "w-full max-w-4xl mx-auto flex flex-col gap-6"}>
+              
+              {/* Brano lungo se presente */}
+              {currentQuestion.passage && (
+                <div className="w-full lg:w-1/2 flex flex-col">
+                  <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex-1 lg:max-h-[calc(100vh-200px)] overflow-y-auto custom-scrollbar">
+                    <h3 className="font-bold text-slate-800 mb-4 flex items-center gap-2 border-b pb-2">
+                      <BookOpen className="w-5 h-5 text-indigo-600"/> Testo di Riferimento
+                    </h3>
+                    <div className="text-slate-700 leading-relaxed space-y-4 text-sm sm:text-base text-justify whitespace-pre-wrap">
+                      {currentQuestion.passage}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Domanda e Opzioni */}
+              <div className={currentQuestion.passage ? "w-full lg:w-1/2 flex flex-col gap-4" : "w-full flex flex-col gap-4"}>
+                <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                  <h2 className="text-xl sm:text-2xl font-bold text-slate-800 leading-snug mb-2">
+                    {currentQuestion.question}
+                  </h2>
+                </div>
+
+                <div className="flex flex-col gap-3">
+                  {currentQuestion.options.map((option, index) => {
+                    const isSelected = isAnswered && currentAnswer.selectedIndex === index;
+                    const isCorrectAnswer = index === currentQuestion.correctAnswerIndex;
+                    
+                    let buttonClass = "w-full text-left p-4 rounded-xl border-2 transition-all flex items-start gap-3 relative overflow-hidden ";
+                    
+                    if (!isAnswered) {
+                      buttonClass += "bg-white border-slate-200 hover:border-indigo-400 hover:bg-indigo-50 cursor-pointer text-slate-700";
+                    } else {
+                      buttonClass += "cursor-default ";
+                      if (isCorrectAnswer) {
+                        buttonClass += "bg-green-50 border-green-500 text-green-900 shadow-sm";
+                      } else if (isSelected && !isCorrectAnswer) {
+                        buttonClass += "bg-red-50 border-red-500 text-red-900 shadow-sm";
+                      } else {
+                        buttonClass += "bg-white border-slate-200 text-slate-400 opacity-60";
+                      }
+                    }
+
+                    return (
+                      <button key={index} disabled={isAnswered} onClick={() => handleSelectOption(index)} className={buttonClass}>
+                        <div className={`mt-0.5 shrink-0 flex items-center justify-center w-6 h-6 rounded-full border-2 text-xs font-bold ${isAnswered && isCorrectAnswer ? 'border-green-600 bg-green-600 text-white' : isAnswered && isSelected && !isCorrectAnswer ? 'border-red-600 bg-red-600 text-white' : 'border-slate-300 text-slate-500'}`}>
+                          {String.fromCharCode(65 + index)}
+                        </div>
+                        <span className="font-medium text-[15px] sm:text-base leading-snug">{option}</span>
+                        
+                        {isAnswered && isCorrectAnswer && (
+                          <CheckCircle2 className="absolute right-4 top-1/2 -translate-y-1/2 w-6 h-6 text-green-600" />
+                        )}
+                        {isAnswered && isSelected && !isCorrectAnswer && (
+                          <XCircle className="absolute right-4 top-1/2 -translate-y-1/2 w-6 h-6 text-red-600" />
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Feedback Immediato se ha risposto */}
+                {isAnswered && (
+                  <div className="animate-in fade-in duration-300 mt-2">
+                    <div className={`p-5 rounded-xl border-l-4 shadow-sm ${currentAnswer.isCorrect ? 'bg-green-50 border-green-500' : 'bg-red-50 border-red-500'}`}>
+                      <h4 className="font-bold flex items-center gap-2 mb-2">
+                        {currentAnswer.isCorrect ? (
+                          <><CheckCircle2 className="w-5 h-5 text-green-600"/> Risposta Esatta (+1 pt)</>
+                        ) : (
+                          <><XCircle className="w-5 h-5 text-red-600"/> Risposta Errata (-0.25 pt)</>
+                        )}
+                      </h4>
+                      <p className="text-sm text-slate-800 leading-relaxed font-medium">
+                        {currentQuestion.explanation}
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </main>
+
+          {/* Bottom Navigation Bar */}
+          <div className="fixed bottom-0 left-0 right-0 bg-white border-t p-4 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] z-10">
+            <div className="max-w-4xl mx-auto flex items-center justify-between gap-4">
+              <button 
+                onClick={handlePrev} 
+                disabled={currentIndex === 0}
+                className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-3 rounded-xl border-2 border-slate-200 text-slate-600 font-bold hover:bg-slate-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <ChevronLeft className="w-5 h-5"/> <span className="hidden sm:inline">Precedente</span>
+              </button>
+              
+              {currentIndex < quizQuestions.length - 1 ? (
+                <button 
+                  onClick={handleNext}
+                  className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-8 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl transition-colors shadow-md"
+                >
+                  <span className="hidden sm:inline">{isAnswered ? "Prossima Domanda" : "Salta e vai avanti"}</span>
+                  <span className="sm:hidden">{isAnswered ? "Prossima" : "Salta"}</span>
+                  <ChevronRight className="w-5 h-5"/>
+                </button>
+              ) : (
+                <button 
+                  onClick={() => setShowSubmitModal(true)}
+                  className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-8 py-3 bg-slate-800 hover:bg-slate-900 text-white font-bold rounded-xl transition-colors shadow-md"
+                >
+                  Consegna Test <Send className="w-5 h-5"/>
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Modal Mappa Domande (Griglia) */}
+          {showGridModal && (
+            <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+              <div className="bg-white w-full max-w-3xl max-h-[90vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-in zoom-in-95 duration-200">
+                <div className="flex justify-between items-center p-5 border-b bg-slate-50">
+                  <h3 className="text-xl font-bold flex items-center gap-2 text-slate-800">
+                    <LayoutGrid className="w-6 h-6 text-indigo-600"/> Mappa delle Domande
+                  </h3>
+                  <button onClick={() => setShowGridModal(false)} className="text-slate-400 hover:text-slate-700 p-1">
+                    <X className="w-6 h-6" />
+                  </button>
+                </div>
+                
+                <div className="p-6 overflow-y-auto custom-scrollbar flex-1">
+                  <div className="grid grid-cols-5 sm:grid-cols-10 gap-2 sm:gap-3">
+                    {quizQuestions.map((_, i) => {
+                      const ans = userAnswers[i];
+                      let btnClass = "w-full aspect-square rounded-lg font-bold text-sm flex items-center justify-center transition-all ";
+                      
+                      if (ans) {
+                        btnClass += ans.isCorrect ? "bg-green-500 text-white border border-green-600 shadow-sm " : "bg-red-500 text-white border border-red-600 shadow-sm ";
+                      } else {
+                        btnClass += "bg-white border-2 border-slate-200 text-slate-500 hover:border-indigo-400 hover:text-indigo-600 ";
+                      }
+
+                      if (i === currentIndex) {
+                        btnClass += "ring-4 ring-indigo-300 ring-offset-1 ";
+                      }
+
+                      return (
+                        <button 
+                          key={i}
+                          onClick={() => { setCurrentIndex(i); setShowGridModal(false); }}
+                          className={btnClass}
+                        >
+                          {i + 1}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <div className="p-4 border-t bg-slate-50 flex justify-center gap-6 text-sm font-semibold text-slate-600">
+                  <div className="flex items-center gap-2"><div className="w-3 h-3 rounded-full bg-green-500"></div> Esatta</div>
+                  <div className="flex items-center gap-2"><div className="w-3 h-3 rounded-full bg-red-500"></div> Errata</div>
+                  <div className="flex items-center gap-2"><div className="w-3 h-3 rounded-full bg-white border-2 border-slate-300"></div> Da fare</div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Modal Conferma Consegna */}
+          {showSubmitModal && (
+            <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+              <div className="bg-white w-full max-w-md rounded-2xl shadow-2xl p-6 text-center animate-in zoom-in-95 duration-200">
+                <div className="w-16 h-16 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Send className="w-8 h-8"/>
+                </div>
+                <h3 className="text-2xl font-bold text-slate-800 mb-2">Vuoi consegnare il test?</h3>
+                <p className="text-slate-600 mb-6">
+                  Hai risposto a <strong className="text-indigo-600">{answeredCount}</strong> domande su <strong>{quizQuestions.length}</strong>. 
+                  {answeredCount < quizQuestions.length && " Le domande non risposte varranno 0 punti."}
+                </p>
+                <div className="flex gap-3">
+                  <button onClick={() => setShowSubmitModal(false)} className="flex-1 py-3 px-4 rounded-xl border-2 border-slate-200 text-slate-600 font-bold hover:bg-slate-50 transition-colors">
+                    Continua il test
+                  </button>
+                  <button onClick={submitTest} className="flex-1 py-3 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold transition-colors shadow-md">
+                    Consegna ora
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>
